@@ -1,0 +1,15 @@
+# Site settings
+title: Mysterious Pants
+author: Mysterious Pants
+email:
+description: > # this means to ignore newlines until "baseurl:"
+baseurl: "" # the subpath of your site, e.g. /blog/
+url: "http://mysteriouspants.com"
+twitter_username: mysterytrousers
+github_username:  mysteriouspants
+paginate: 5
+paginate_path: /:num
+
+# Build settings
+markdown: kramdown
+ink_watch: theme
