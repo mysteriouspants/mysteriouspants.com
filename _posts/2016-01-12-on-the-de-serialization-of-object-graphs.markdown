@@ -277,9 +277,12 @@ writing deserializers. So I created an abstract class.
     {
       public struct Result
       {
-        T result;
-        Promise[] promises;
-        KeyValuePair<IDType, object>[] fulfillments;
+        public T result;
+        public IEnumeration<Promise> promises;
+        public IEnumeration<KeyValuePair<IDType, object>> fulfillments;
+
+        // fulfills all promises, returning promises that were not fulfilled.
+        public IEnumeration<Promise> FulfillAll() { ... }
       }
 
       public abstract Result LoadFromCLR(object o);
@@ -289,8 +292,50 @@ writing deserializers. So I created an abstract class.
 Unfortunately, there isn't a stellar way to enforce either singleton or
 interesting-instance patterns in derived classes in C#. But the result
 of this pattern is that the code for de/serializing any object can be
-written in the same file as that object. So, our graph from before might
-be written a little differently.
+written in the same file as that object.
+
+`Coder{T}` itself is an abstract class, so it's meant to be extended and specialized by child classes. After transforming a string of JSON or some other serialized data to CLR structures (dictionaries, strings, arrays, and numbers), feed that tree of objects to the `LoadFromCLR` method on an appropriate instance of a child of `Coder{T}`. `LoadFromCLR` may then chain through any number of `Coder{T}` specializations, ultimately returning a `Result`, which includes three key things: the value or result of the load; the promises, or the little lambdas that will glue object references together; and finally fulfillments, which are the objects themselves that should be glued (basically, any object which knows its own ID).
+
+The concept of a promise is somewhat cribbed from asynchronous programming. Unfortunately, C# 2.0/3.5 doesn't include a Promise type, as it was introduced in C# 4.0. So I rolled my own Promise (it's not hard to do), and even tacked on some additional data to help in the process.
+
+    public class Promise
+    {
+      protected Func<object[], IEnumerable<Promise>> fulfillment;
+      public IDType awaitingId;
+      public ulong fulfillmentCounter = 0;
+      public Promise(Func<object[], IEnumerable<Promise>> fulfillment)
+      {
+        this.fulfillment = fulfillment;
+      }
+      public IEnumerable<Promise> Fulfill(object[] args)
+      {
+        fulfillmentCounter++;
+        return fulfillment.Invoke(args);
+      }
+    }
+
+Bringing everything together, the round-trip would, to the user, look quite simple.
+
+    // this bit is rather specific to how your data comes, and
+    // where it comes from
+    var json = // some string
+    var reader = new JsonReader(); // from JsonFx
+    var dict = reader.Read<Dictionary<string, object>(json);
+
+    // this is what we've been discussing, 314!
+    var res = GraphRootCoder.Instance.LoadFromCLR(dict);
+    var unfulfilled = res.FulfillAll();
+    if (unfulfilled.Count > 0) {
+      ...
+    }
+    var graphRoot = res.result; // done!
+
+
+So, our graph from before might be written a little differently.
+
+    // IDType.cs
+
+    public struct IDType : ulong { }
 
     // GraphRoot.cs
 
@@ -303,7 +348,7 @@ be written a little differently.
     public class GraphRootCoder : Coder<GraphRoot>
     {
       // convenience only - looks nicer than
-      // (new GraphRootLoader()).Method
+      // (new GraphRootLoader()).LoadFromCLR()
       public static GraphRootLoader Instance
       { get { return new GraphRootLoader(); } }
 
@@ -322,15 +367,15 @@ be written a little differently.
           n1s = o["n1s"].Select(n1_clr =>
           {
             var n1_r = Node1Coder.LoadFromCLR(n1_clr);
-            promises.AddAll(n1_r.promises);
-            fulfillments.AddAll(n1_r.fulfillments);
+            promises.AddRange(n1_r.promises);
+            fulfillments.AddRange(n1_r.fulfillments);
             return n1_r.result;
           }).ToArray(),
           n2s = o["n2s"].Select(n2_clr =>
           {
             var n2_r = Node2Coder.LoadFromCLR(n2_clr);
-            promises.AddAll(n2_r.promises);
-            fulfillments.AddAll(n2_r.fulfillments);
+            promises.AddRange(n2_r.promises);
+            fulfillments.AddRange(n2_r.fulfillments);
             return n2_r.result;
           }).ToArray()
         };
@@ -338,8 +383,8 @@ be written a little differently.
         return new Result
         {
           result = gr,
-          promises = promises.ToArray(),
-          fulfillments = fulfillments.ToArray()
+          promises = promises,
+          fulfillments = fulfillments
         };
       }
 
@@ -368,9 +413,6 @@ be written a little differently.
 
     public class Node2
     {
+      public IDType id;
       public uint ui1;
     }
-
-
-
-
