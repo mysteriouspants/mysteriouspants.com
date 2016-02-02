@@ -1,7 +1,7 @@
 ---
-layout:     theme:post
 title:      Pyramid on the Edge of Forever
 date:       2014-09-15 12:44:29
+tags:       maths
 summary:    The sales associate at Kelly Moore looked at me as if I had grown a third arm right there in front of him.
 ---
 

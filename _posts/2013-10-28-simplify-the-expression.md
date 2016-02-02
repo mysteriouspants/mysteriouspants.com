@@ -1,5 +1,4 @@
 ---
-layout:     theme:post
 title:      Simplify the Expression
 date:       2013-10-28
 summary:    A really nifty algebraic simplification.

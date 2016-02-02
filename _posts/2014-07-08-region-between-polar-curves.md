@@ -1,5 +1,4 @@
 ---
-layout:     theme:post
 title:      Region between Polar Curves
 date:       2014-07-14 22:47:29
 summary:    It is not enough to know how the equation looks, you must understand how the graph itself is generated.

@@ -1,6 +1,8 @@
 ---
-layout: theme:page_naked
+layout: default
 ---
+
+*8 July 2011, 11:26:46 AM Eastern Daylight Time*
 
 "A thousand strangers chanted together with the countdown. And then it
 happened.

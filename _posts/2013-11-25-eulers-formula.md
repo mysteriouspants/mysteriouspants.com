@@ -1,5 +1,4 @@
 ---
-layout:     theme:post
 title:      Euler's Formula, or a Study in Cool
 date:       2013-11-25
 summary:    In fine, the relationship between trigonometric transcendentals and exponentiation can be said to be imaginary!

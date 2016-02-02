@@ -1,5 +1,4 @@
 ---
-layout:     theme:post
 title:      Is maths being taught incorrectly?
 date:       2014-03-01 00:49:29
 summary:    It is not because maths is hard, but that we believe it to be hard that maths is hard.

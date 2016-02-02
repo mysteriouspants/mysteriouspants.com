@@ -1,5 +1,4 @@
 ---
-layout:     theme:post
 title:      Finding a Spring Constant
 date:       2013-10-04
 summary:    Hooke's law takes a curious twist!

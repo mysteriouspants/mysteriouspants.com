@@ -1,5 +1,4 @@
 ---
-layout:     theme:post
 title:      Computational Re-expression of Simpson's Rule
 date:       2014-07-03 15:26:29
 ---

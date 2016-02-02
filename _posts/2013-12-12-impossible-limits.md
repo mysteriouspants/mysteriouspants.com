@@ -1,5 +1,4 @@
 ---
-layout:     theme:post
 title:      Limit of Impossibility
 date:       2013-12-12 17:06:29
 summary:    Utilize a Taylor series to evaluate a limit.

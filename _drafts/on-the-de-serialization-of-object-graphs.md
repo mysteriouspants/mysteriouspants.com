@@ -1,5 +1,4 @@
 ---
-layout:     theme:post
 title:      On the (De)serialization of Object Graphs
 date:       2016-01-09 21:32:07
 ---

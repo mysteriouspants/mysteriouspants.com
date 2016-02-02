@@ -1,5 +1,4 @@
 ---
-layout:   theme:post
 title:    Ceci n'est pas un pipe
 date:     2013-10-23
 summary:  When integrating a three-symbol term, trigonometry comes to the rescue!

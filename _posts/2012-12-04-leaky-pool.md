@@ -1,5 +1,4 @@
 ---
-layout:     theme:post
 title:      The Case of the Leaky Pool
 date:       2012-12-04
 summary:    Detective Trousers sifts through some of the lower-levels of the system to bag one of the most innocuous bugs ever seen.

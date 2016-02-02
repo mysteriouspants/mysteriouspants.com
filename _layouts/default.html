@@ -1,20 +1,34 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  {% include head.html %}
+  <title>{{ site.name }}{% if page.title %} - {{ page.title }}{% endif %}</title>
+  <link rel="shortcut icon" href="{{ site.baseurl }}assets/images/favicon.ico">
+  <link rel="stylesheet" href="{{ site.baseurl }}assets/css/style.css">
+  <link rel="alternate" type="application/rss+xml" title="My Blog" href="{{ site.baseurl }}rss.xml">
+  <link rel="stylesheet" href="{{ site.baseurl }}assets/css/highlight.css">
+</head>
+<body>
 
-  <body>
+  {% include navigation.html %}
 
-    {% include header.html %}
+  {% if page.profile %}
+      {% include profile.html %}
+  {% endif %}
 
-    <div class="page-content">
-      <div class="wrapper">
-        {{ content }}
-      </div>
-    </div>
+  <section id="wrapper" class="{% if page.profile %}home{% endif %}">
+    {{ content }}
+  </section>
 
-    {% include footer.html %}
+  <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+  <script src="{{ site.baseurl }}assets/js/main.js"></script>
+  <script src="{{ site.baseurl }}assets/js/highlight.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
 
-  </body>
 
+</body>
 </html>

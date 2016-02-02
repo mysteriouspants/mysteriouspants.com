@@ -1,5 +1,4 @@
 ---
-layout:     theme:post
 title:      Integral of the Inverse Tangent
 date:       2013-10-21
 summary:    Never forget that everything is implicitly multiplied by one.

@@ -1,21 +1,49 @@
-# Site settings
-title: Mysterious Pants
-author: Mysterious Pants
-email:
-description: > # this means to ignore newlines until "baseurl:"
-baseurl: "" # the subpath of your site, e.g. /blog/
+name: Mysterious Pants
+description: It's an adventure, 314!
+meta_description: "Mysterious Pants, it's an adventure, 314!"
 
-url: "http://mysteriouspants.com"
-twitter_username: mysterytrousers
-github_username:  mysteriouspants
+aboutPage: false
+
+markdown: kramdown
+highlighter: rouge
 
 paginate: 5
+gems: [ jekyll-paginate ]
 paginate_path: /:num
+
+baseurl: /
+domain_name: 'http://mysteriouspants.com'
+
+disqus: false
+disqus_shortname: 'your-disqus-shortname'
+
+# Details for the RSS feed generator
+url:            'http://mysteriouspants.com'
+author:         'Mysterious Pants'
+authorTwitter:  'mysterytrousers'
+
+permalink:       /:year/:month/:day/:title/
 
 exclude: [ README.md, COPYING.md ]
 timezone: America/Los_Angeles
 encoding: utf-8
 
-# Build settings
-markdown: kramdown
-ink_watch: theme
+defaults:
+    -
+        scope:
+            path: "" # empty string for all files
+            type: pages
+        values:
+            layout: default
+    -
+        scope:
+            path: "" # empty string for all files
+            type: posts
+        values:
+            layout: post
+    -
+        scope:
+            path: ""
+            type: drafts
+        values:
+            layout: post
