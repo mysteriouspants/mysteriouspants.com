@@ -1,5 +1,6 @@
 ---
 layout: default
+profile: false
 ---
 
 *8 July 2011, 11:26:46 AM Eastern Daylight Time*
@@ -7,7 +8,7 @@ layout: default
 "A thousand strangers chanted together with the countdown. And then it
 happened.
 
-<a href="/content/sig/STS-135_begins_takeoff.jpg"><img src="/content/sig/STS-135_begins_takeoff.jpg" alt="STS-135 begins takeoff" style="float: left; margin-right: 0.75em; margin-bottom: 0.75em;" width="50%"/></a>
+<a href="/content/sig/STS-135_begins_takeoff.jpg"><img src="/content/sig/STS-135_begins_takeoff.jpg" alt="STS-135 begins takeoff" style="float: left; margin-right: 0.75em; margin-bottom: 0.75em; width: 50%;"/></a>
 
 "The massive clouds of smoke billowed out the sides of the tower poking
 out above the trees. The shuttle rising slowly, and then faster. And
@@ -21,7 +22,7 @@ see a shuttle leave a launchpad.
 eyes with my shirt. The folks closest to me know that this isn't exactly
 an uncommon event for me, but I felt it all come back: A little kid
 alone in his basement building a puzzle of the shuttle, dreaming of
-space. <a href="/content/sig/STS-135_launch_viewed_from_Shuttle_Training_Aircraft.jpg"><img src="/content/sig/STS-135_launch_viewed_from_Shuttle_Training_Aircraft.jpg" alt="STS-135 viewed from Shuttle Training Aircraft" style="float: right; margin-left: 0.75em; margin-bottom: 0.75em;" width="50%"/></a> Seeing Challenger through the library window on a day when I was
+space. <a href="/content/sig/STS-135_launch_viewed_from_Shuttle_Training_Aircraft.jpg"><img src="/content/sig/STS-135_launch_viewed_from_Shuttle_Training_Aircraft.jpg" alt="STS-135 viewed from Shuttle Training Aircraft" style="float: right; margin-left: 0.75em; margin-bottom: 0.75em; width: 50%;"/></a> Seeing Challenger through the library window on a day when I was
 too young to understand what it meant for 7 people to die in the name of
 science exploration. I learned about computers because of all this
 stuff. The Space Shuttle was an honest to god spaceship. It filled the

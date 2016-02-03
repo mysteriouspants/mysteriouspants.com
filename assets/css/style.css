@@ -139,13 +139,13 @@ nav.main-nav a.cta {
 }
 
 #wrapper {
-  max-width: 600px;
+  max-width: 750px;
   margin: 0 auto;
   padding: 60px 40px 100px 40px;
 }
 
 #wrapper.home {
-	max-width: 600px;
+	max-width: 750px;
 	margin: 0 auto;
 	padding: 0px 40px 20px 40px;
 }
@@ -182,8 +182,8 @@ a,
 	transition: all 0.15s ease;
 }
 
-ul 	{ margin:0; padding:0; }
-li	{ list-style-type:circle; list-style-position:inside; }
+ul 	{ margin:0; padding:0 0 0 1.1em; }
+li	{ list-style-type:circle; list-style-position: outside;}
 section ul, section ol { margin-bottom: 20px; }
 
 /* Line Height */
@@ -192,6 +192,13 @@ section ul, section ol { margin-bottom: 20px; }
 b, strong { font-weight: 500;
   color: #1E2025; }
 em, i { font-style: italic; }
+
+code {
+  display: inline-block;
+  white-space: nowrap;
+  font-family: Menlo, Monaco, "Andale Mono", "Lucida Console", "Courier New", monospace;
+  margin: -1px 0;
+}
 
 #title {
 	display: inline-block;
@@ -400,6 +407,14 @@ Post List
 	top: 1px;
 	font: 300 17px/1.8 "Helvetica Neue",helvetica,Arial,sans-serif;
 	color: #bbb;
+}
+
+#post-list li.year {
+  text-align: center;
+}
+
+#post-list li.year h2 {
+  max-width: 100%;
 }
 
 #post-list-footer {
@@ -643,3 +658,6 @@ h2.month {
 	.post h1 { font-size:24px; }
 	.post h2 { font-size:20px; }
 }
+
+figure { margin-bottom: 20px; }
+figure figcaption { text-align: center; }

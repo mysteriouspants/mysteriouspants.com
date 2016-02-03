@@ -1,11 +1,11 @@
 <nav class="main-nav">
-    {% if page.url != "/index.html" %}
+    {% if page.url != site.baseurl %}
         <a href="{{ site.baseurl }}"> <span class="arrow">←</span> Home </a>
     {% endif %}
 
-    {% if page.url != "/about/" %}
-        {% if site.aboutPage %}
-            <a href="{{ site.baseurl }}about">Colophon </a>
+    {% if page.url != "/contact/" %}
+        {% if site.contactPage %}
+            <a href="{{ site.baseurl }}contact">Contact </a>
         {% endif %}
     {% endif %}
     <a class="cta" href="{{ site.baseurl }}feed.xml" title="If you're into that sort of thing. I don't judge.">RSS</a>
