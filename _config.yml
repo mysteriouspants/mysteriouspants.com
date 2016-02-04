@@ -7,7 +7,7 @@ contactPage:       true
 markdown:          kramdown
 highlighter:       rouge
 
-baseurl:
+# baseurl:           /
 domain_name:       http://mysteriouspants.com
 
 url:               http://mysteriouspants.com
