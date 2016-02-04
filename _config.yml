@@ -1,29 +1,29 @@
-name: Mysterious Pants
-description: It's an adventure, 314!
+name:              Mysterious Pants
+description:       It's an adventure, 314!
 meta_description: "Mysterious Pants: it's an adventure, 314!"
 
-contactPage: true
+contactPage:       true
 
-markdown: kramdown
-highlighter: rouge
+markdown:          kramdown
+highlighter:       rouge
 
-baseurl: /
-domain_name: 'http://mysteriouspants.com'
+baseurl:
+domain_name:       http://mysteriouspants.com
 
-# Details for the RSS feed generator
-url:            'http://mysteriouspants.com'
-author:         'Mysterious Pants'
-authorTwitter:  'mysterytrousers'
+url:               http://mysteriouspants.com
+author:            Christopher R. Miller
+authorTwitter:     mysterytrousers
+githubRepo:        mysteriouspants/mysteriouspants.com
 
-permalink:       /blog/:year/:month/:title/
+permalink:         /blog/:year/:month/:title/
 
-paginate: 9999
-paginate_path: "/blog/page/:num/"
-gems: [ jekyll-paginate ]
+paginate:          9999
+paginate_path:     /blog/page/:num/
+gems:            [ jekyll-paginate, jekyll-sitemap ]
 
-exclude: [ README.md, COPYING.md, Gemfile, Gemfile.lock ]
-timezone: America/Los_Angeles
-encoding: utf-8
+exclude:         [ README.md, COPYING.md, Gemfile, Gemfile.lock ]
+timezone:          America/Los_Angeles
+encoding:          utf-8
 
 defaults:
     -

@@ -195,7 +195,6 @@ em, i { font-style: italic; }
 
 code {
   display: inline-block;
-  white-space: nowrap;
   font-family: Menlo, Monaco, "Andale Mono", "Lucida Console", "Courier New", monospace;
   margin: -1px 0;
 }
