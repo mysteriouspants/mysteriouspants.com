@@ -9,13 +9,20 @@ highlighter:       rouge
 kramdown:
     input:         gfm
 
-# baseurl:           /
+baseurl:
 domain_name:       http://mysteriouspants.com
 
 url:               http://mysteriouspants.com
-author:            Christopher R. Miller
-authorTwitter:     mysterytrousers
 githubRepo:        mysteriouspants/mysteriouspants.com
+
+default_author:    Christopher R. Miller
+authors:
+    -
+        name:      Christopher R. Miller
+        twitter:   mysterytrousers
+        github:    mysteriouspants
+        avatar:    avatar.png
+        about:     Computer scientist, humorist, and something of a math geek.
 
 permalink:         /blog/:year/:month/:title/
 

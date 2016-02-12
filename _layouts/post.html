@@ -12,3 +12,23 @@ archive: true
         {{content}}
     </section>
 </article>
+
+{% if page.author != null %}
+  {% assign page_author = page.author %}
+{% else %}
+  {% assign page_author = site.default_author %}
+{% endif %}
+
+{% for author in site.authors %}
+  {% if author.name == page_author %}
+    <footer id="post-meta" class="clearfix">
+        <a href="http://twitter.com/{{ author.twitter }}">
+            <img class="avatar" src="{{ site.baseurl }}/assets/images/{{ author.avatar }}">
+            <div>
+                <span class="dark">{{ author.name }}</span>
+                <span>{{ author.about }}</span>
+            </div>
+        </a>
+    </footer>
+  {% endif %}
+{% endfor %}
