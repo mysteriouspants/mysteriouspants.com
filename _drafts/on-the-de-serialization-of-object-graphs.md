@@ -29,390 +29,194 @@ I do hope that you never find yourself in a situation such as mine, 314, but I a
 
 # Transform
 
+This transform step is exclusively because I had written a large (1,000+ LOC) load step that depended upon the output from JsonFx, which produces .NET-style objects: dictionaries, arrays, strings, and boxed values. *If you don't need to or ever plan on using anything other than SimpleJson, you can probably skip this step and use `JSONNode` itself!*
+
+ When the WebGL build started and promptly exploded due to some obscure and difficult-to-debug unsupported-reflection issue, the only option was to switch to SimpleJson. Rather than rewrite all my existing code, I decided to transform SimpleJson's `JSONNode`s into more .NET-default containers, then feed that into my existing loading code.
+
+The first step I called `Massage`, which takes a `JSONNode` and produces an `object`, which can be expected to be one of `IDictionary<string, object>`, `object[]`, `string`, `object` (a boxed value, one of `double`, `float`, `int` or `bool`), or `null`. It's not quite perfect to JsonFx, as arrays don't coalesce to their contained types - so if you know you have an `IDictionary<string, object>[]`, you first have to treat it as `object[]` and then case the individual elements in your visitor to `IDictionary<string, object>`. Even still, that meant changing about ten lines in my loading code.
+
+~~~ csharp
+object Massage(JSONNode n)
+{
+  if (n is JSONClass) {
+    var dict = new Dictionary<string, object>();
+
+    foreach (var o in n as JSONClass) {
+      var kv = (KeyValuePair<string, JSONNode>)o;
+      dict[kv.Key] = Massage(kv.Value);
+    }
+
+    return dict;
+  } else if (n is JSONArray) {
+    var l = new List<object>();
+
+    foreach (var o in n as JSONArray) {
+      var n2 = o as JSONNode;
+      l.Add(Massage(n2));
+    }
+
+    return l.ToArray();
+  } else if (n is JSONData) {
+    var d = n as JSONData;
+
+    switch (d.Tag) {
+    case JSONBinaryTag.BoolValue:   return d.AsBool;
+    case JSONBinaryTag.DoubleValue: return d.AsDouble;
+    case JSONBinaryTag.FloatValue:  return d.AsFloat;
+    case JSONBinaryTag.IntValue:    return d.AsInt;
+    case JSONBinaryTag.Value:       return d.Value;
+    }
+  }
+
+  throw new System.Exception("simplejson transform error!");
+}
+~~~
+
+The other step is to enable bi-directionality, so that we can "round-trip" our serialization. As the first method is `Massage`, it logically follows that this should be called `Tenderise`.
+
+~~~ csharp
+JSONNode Tenderise(object o)
+{
+  if (o is IDictionary<string, object>) {
+    var dict = o as IDictionary<string, object>;
+    var n = new JSONClass();
+
+    foreach (var kv in dict) {
+      n.Add(kv.Key, Tenderise(kv.Value));
+    }
+
+    return n;
+  } else if (o is bool) {
+    return new JSONData((bool)o);
+  } else if (o is int) {
+    return new JSONData((int)o);
+  } else if (o is double) {
+    return new JSONData((double)o);
+  } else if (o is string) {
+    return new JSONData(o as string);
+  } else if (o is char) {
+    return new JSONData(o.ToString());
+  } else if (o is IEnumerable) {
+    var arr = o as IEnumerable;
+    var n = new JSONArray();
+
+    foreach (var an in arr) {
+      n.Add(Tenderise(an));
+    }
+
+    return n;
+  }
+
+  throw new System.Exception("attempted to tenderise unrecognised type " + o.GetType());
+}
+~~~
+
+Note that the case for `IEnumerable` comes last because `string` implements `IEnumerable`. If that doesn't happen, then you get some lovely fully-expanded arrays of strings one-character long each in your generated JSON - which is highly amusing, but breaks a surprising number of things.
+
 # Load
 
+The first reaction to loading is to write a method for each type of object (class) that needs to be loaded. I handled references between objects by capturing the code to set the reference in a closure, then storing those closures and calling them promises. Simultaneously, even load of an object that could fulfill a promise was collected, connecting the two as the process continues. Unfulfilled promises can be logged and recorded as errors.
 
-## The Naïve Approach
+This created a partial class spread across many files which was extremely hard to follow, even for me - who wrote the goofy thing.
 
-A naïve approach will see a multitude of functions, one for each type of
-logical object in the graph. This is only frustrated by C#'s lack of
-bare functions. They must be owned by an object, or be static to a
-class.
+I can do better, 314.
 
-    public class GraphRoot
-    {
-      public string sz1;
-      public Node1[] n1s;
-      public Node2 n2;
-    }
+So, inspired by Cocoa's `NSCoder` pattern, I wanted something that would enable a very simple-to-read and simple-to-extend pattern for writing deserializers. Unfortunately this isn't easily accomplished in C# using constructors (for reasons which will become apparent), and cannot be accomplished by static methods because there is no way to enforce the contract presence of a static method in C# (true story). Which makes some sense based on how static members are handled in the runtime. Working around these constraints, I created an abstract class.
 
-    public class Node1 { public int i1; }
-    public class Node2 { public double d1; }
+~~~ csharp
+public abstract class Coder<T>
+{
+  public struct Result
+  {
+    public T result;
+    public IEnumeration<Promise> promises;
+    public IEnumeration<KeyValuePair<IDType, object>> fulfillments;
 
-    public class GraphLoader
-    {
-      public static GraphRoot LoadGraph(IDictionary<string, object> o)
-      {
-        return new GraphRoot
-        {
-          sz1 = o["sz1"] as string,
-          n1s = (o["n1s"] as Dictionary<string, object>[])
-            .Select(n1 => LoadNode1(n1).ToArray(),
-          n2 = LoadNode2(o["n2"] as Dictionary<string, object>)
-        };
-      }
+    // fulfills all promises, returning promises that were not fulfilled.
+    public IEnumeration<Promise> FulfillAll() { ... }
+  }
 
-      public static Node1 LoadNode1(IDictionary<string, object> o)
-      {
-        return new Node1
-        {
-          i1 = Convert.ToInt(o["i1"])
-        };
-      }
+#if USING_JsonFx
+  public abstract Result LoadFromCLR(object o);
+  public abstract object MarshalToCLR(T t);
+#else
+  public abstract Result LoadFromNode(JSONNode n);
+  public abstract JSONNode MarshalToNode(T t);
+#endif
+}
+~~~
 
-      public static Node1 LoadNode2(IDictionary<string, object> o)
-      {
-        return new Node2
-        {
-          d1 = Convert.ToDouble(o["d1"]);
-        };
-      }
-    }
+Unfortunately, there isn't a stellar way to enforce either singleton or interesting-instance patterns in derived classes in C#. But the result of this pattern is that the code for de/serializing any object can be written in the same file as that object.
 
-For the most part, this approach is perfectly fine. It's simple and it
-performs its job well. It breaks down, however, as more classes are
-added. In other words, `GraphLoader` gets to be quite long, and I do not
-like very long files, especially if they touch many different classes.
-It becomes hard to follow.
-
-A simple extension of this technique uses partial classes to break it up
-into multiple files.
-
-    // GraphLoader+LoadGraph.cs
-
-    public partial class GraphLoader
-    {
-      public static GraphRoot LoadGraph(IDictionary<string, object> o)
-      {
-        ...
-      }
-    }
-
-    // GraphLoader+LoadNode1.cs
-
-    public partial class GraphLoader
-    {
-      public static Node1 LoadNode1(IDictionary<string, object> o)
-      {
-        ...
-      }
-    }
-
-    // GraphLoader+LoadNode2.cs
-
-    public partial class GraphLoader
-    {
-      public static Node2 LoadNode2(IDictionary<string, object> o)
-      {
-        ...
-      }
-    }
-
-## Object References
-
-By far the most maddening aspect of deserialization is reconstituting
-references between objects. For simple has-one and has-many
-relationships, it's trivial to reconstitute that reference as previously
-shown. Non-parent-child relationships, however, are difficult to
-reconstitute. Consider the following object graph:
-
-    public class GraphRoot
-    {
-      public Node1[] n1s;
-      public Node2[] n2s;
-    }
-
-    public class Node1
-    {
-      public Node2[] n2s;
-    }
-
-    public class Node2
-    {
-      public uint ui1;
-    }
-
-Any `Node2` can be considered a child of `GraphRoot` or of `Node1`,
-though I should say that it is safer to consider it likely a child of
-`GraphRoot`, just in case it is referenced by more than one `Node1`.
-
-To unambiguously represent that graph in JSON (or any serialized data
-format), `Node2` must be decorated with a unique ID. In my wanderings I
-get that ID generated by MongoDB, though I do harbor dreams of using
-integer IDs generated by PostgreSQL in the future. (I am not a fan of
-MongoDB).
-
-    public class Node2
-    {
-      public IDType id;
-      public uint ui1;
-    }
-
-With this, we might represent the graph in JSON.
-
-    { "n1s": [
-        { "n2s": [ 1, 2 ] },
-        { "n2s": [ 2, 3 ] } ],
-      "n2s": [
-        { "id": 1, "ui1": 7 },
-        { "id": 2, "ui1": 5 },
-        { "id": 3, "ui1": 3 } ] }
-
-The second part of deserializing these references involves a promise
-manager. When deserializing any reference to a node, it is entirely
-possible that node being referenced hasn't been deserialized yet. Rather
-than invent some mechanism of walking the graph to the appropriate data
-site (if it exists!), instead I opted to use a "promise" to set that
-data, by means of a lambda expression. These lambdas are collected in a
-"promise manager."
-
-    public class PromiseManager
-    {
-      private Dictionary<IDType, List<Func<object>>> promises =
-        new Dictionary<IDType, List<Func<object>>>();
-      private Dictionary<IDType, object> fulfillments =
-        new Dictionary<IDType, object>();
-
-      public void MakePromise(IDType t, Func<object> f)
-      {
-        if (fulfillments.HasKey(t)) {
-          f.Invoke(fulfillments[t]);
-        } else {
-          if (!promises.HasKey(t)) {
-            promises[t] = new List<Func<object>>();
-          }
-
-          promises[t].Add(f);
-        }
-      }
-
-      public void FulfillPromise(IDType t, object o)
-      {
-        if (promises.HasKey(t)) {
-          promises[t].Select(p => p.Invoke(o));
-        }
-
-        fulfillments[t] = o;
-      }
-    }
-
-I think I named mine something inane, like `NaescentObjectManager`, to
-scare coworkers away from trying to use it. But it created some really
-very simple looking deserialization code.
-
-    public class GraphLoader
-    {
-      private PromiseManager pm = new PromiseManager();
-
-      public GraphRoot LoadGraphRoot(IDictionary<string, object> o)
-      {
-        return new GraphRoot
-        {
-          n1s = (o["n1s"] as Dictionary<string, object>[])
-            .Select(n1 => LoadNode1(n1)).ToArray(),
-          n2s = (o["n2s"] as Dictionary<string, object>[])
-            .Select(n2 => LoadNode2(n2)).ToArray()
-        };
-      }
-
-      public Node1 LoadNode1(IDictionary<string, object> o)
-      {
-        var n2s_ids = o["n2s"] as object[];
-        var n2s_objects = new Node2[n2s_ids.Length];
-
-        for (uint i = 0; i < n2s_ids.Length; i++) {
-          var id = LoadIDType(n2s_ids[i]);
-          pm.MakePromise(id, n2 => n2s_objects[i] = n2);
-        }
-
-        return new Node1
-        {
-          n2s = n2s_objects
-        };
-      }
-
-      public Node2 LoadNode2(IDictionary<string, object> o)
-      {
-        var n2 = new Node2
-        {
-          id = LoadIDType(o["id"]),
-          ui1 = Convert.ToUInt(o["ui1"])
-        };
-
-        pm.FulfillPromise(n2.id, n2);
-
-        return n2;
-      }
-
-      public IDType LoadIDType(object o) { ... }
-    }
-
-Yet still I was unhappy. The deserialization file was long, it had a lot
-of jumps between methods, and it wasn't very *functional*. If a
-`GraphLoader` was used, perhaps on accident, to deserialize two
-`GraphRoot`s, the old promises would persist in the promise manager,
-creating strange bugs that are hard to diagnose.
-
-We can do better, 314.
-
-## Functional-style (De)serialization
-
-Inspired in part by Cocoa's `NSCoder` pattern, I wanted something that
-would enable a very simple-to-read and simple-to-extend pattern for
-writing deserializers. So I created an abstract class.
-
-    public abstract class Coder<T>
-    {
-      public struct Result
-      {
-        public T result;
-        public IEnumeration<Promise> promises;
-        public IEnumeration<KeyValuePair<IDType, object>> fulfillments;
-
-        // fulfills all promises, returning promises that were not fulfilled.
-        public IEnumeration<Promise> FulfillAll() { ... }
-      }
-
-      public abstract Result LoadFromCLR(object o);
-      public abstract object MarshalToCLR(T t);
-    }
-
-Unfortunately, there isn't a stellar way to enforce either singleton or
-interesting-instance patterns in derived classes in C#. But the result
-of this pattern is that the code for de/serializing any object can be
-written in the same file as that object.
-
-`Coder{T}` itself is an abstract class, so it's meant to be extended and specialized by child classes. After transforming a string of JSON or some other serialized data to CLR structures (dictionaries, strings, arrays, and numbers), feed that tree of objects to the `LoadFromCLR` method on an appropriate instance of a child of `Coder{T}`. `LoadFromCLR` may then chain through any number of `Coder{T}` specializations, ultimately returning a `Result`, which includes three key things: the value or result of the load; the promises, or the little lambdas that will glue object references together; and finally fulfillments, which are the objects themselves that should be glued (basically, any object which knows its own ID).
+`Coder{T}` itself is an abstract class, so it's meant to be extended and specialized by child classes. After transforming a string of JSON or some other serialized data to CLR structures (dictionaries, strings, arrays, and numbers) or a `JSONNode`, feed that tree of objects to the `LoadFromCLR`/`LoadFromNode` method on an appropriate instance of a child of `Coder{T}`. `LoadFromCLR`/`LoadFromNode` may then chain through any number of `Coder{T}` specializations, ultimately returning a `Result`, which includes three key things: the value or result of the load; the promises, or the little lambdas that will glue object references together like gluing doughnuts to doughnut holes; and finally fulfillments, which are the objects themselves that should be glued (basically, any object which knows its own ID).
 
 The concept of a promise is somewhat cribbed from asynchronous programming. Unfortunately, C# 2.0/3.5 doesn't include a Promise type, as it was introduced in C# 4.0. So I rolled my own Promise (it's not hard to do), and even tacked on some additional data to help in the process.
 
-    public class Promise
-    {
-      protected Func<object[], IEnumerable<Promise>> fulfillment;
-      public IDType awaitingId;
-      public ulong fulfillmentCounter = 0;
-      public Promise(Func<object[], IEnumerable<Promise>> fulfillment)
-      {
-        this.fulfillment = fulfillment;
-      }
-      public IEnumerable<Promise> Fulfill(object[] args)
-      {
-        fulfillmentCounter++;
-        return fulfillment.Invoke(args);
-      }
-    }
+~~~ csharp
+public class Promise
+{
+  protected Func<object[], IEnumerable<Promise>> fulfillment;
+  public IDType awaitingId;
+  public ulong fulfillmentCounter = 0;
+
+  public Promise(Func<object[], IEnumerable<Promise>> fulfillment)
+  {
+    this.fulfillment = fulfillment;
+  }
+
+  public IEnumerable<Promise> Fulfill(object[] args)
+  {
+    fulfillmentCounter++;
+    return fulfillment.Invoke(args);
+  }
+}
+~~~
 
 Bringing everything together, the round-trip would, to the user, look quite simple.
 
-    // this bit is rather specific to how your data comes, and
-    // where it comes from
-    var json = // some string
-    var reader = new JsonReader(); // from JsonFx
-    var dict = reader.Read<Dictionary<string, object>(json);
+~~~ csharp
+// this bit is rather specific to how your data comes, and
+// where it comes from
+var json = // some string
+object o;
+ZooCoder.Result res;
 
-    // this is what we've been discussing, 314!
-    var res = GraphRootCoder.Instance.LoadFromCLR(dict);
-    var unfulfilled = res.FulfillAll();
-    if (unfulfilled.Count > 0) {
-      ...
-    }
-    var graphRoot = res.result; // done!
+#if USING_JsonFx
+  var reader = new JsonReader(); // from JsonFx
+  o = reader.Read<Dictionary<string, object>(json);
+  res = ZooCoder.Instance.LoadFromCLR(o);
+#else
+  var n = JSON.Parse(json);
+  o = Massage(n);
+  res = ZooCoder.Instance.LoadFromNode(o);
+#endif
 
+var unfulfilled = res.FulfillAll();
+if (unfulfilled.Count > 0) {
+  // handle unfulfilled promises in the way that makes most sense
+}
+var zoo = res.result; // done!
+~~~
 
-So, our graph from before might be written a little differently.
+To illustrate, the following JSON might be parsed so:
 
-    // IDType.cs
+~~~ json
+{ "type": "zoo",
+  "animals": [
+    { "type": "elephant",
+      "preferredFeed": 1,
+      "trunkLength": 13 },
+    { "type": "walrus",
+      "preferredFeed": 2,
+      "weight": 900 } ],
+  "feed": [
+    { "id": 1,
+      "name": "peanuts" },
+    { "id": 2,
+      "name": "fish" } ] }
+~~~
 
-    public struct IDType : ulong { }
-
-    // GraphRoot.cs
-
-    public class GraphRoot
-    {
-      public Node1[] n1s;
-      public Node2[] n2s;
-    }
-
-    public class GraphRootCoder : Coder<GraphRoot>
-    {
-      // convenience only - looks nicer than
-      // (new GraphRootLoader()).LoadFromCLR()
-      public static GraphRootLoader Instance
-      { get { return new GraphRootLoader(); } }
-
-      public override Result LoadFromCLR(object o)
-      {
-        if (o.GetType() != typeof(Dictionary<string, object>)) {
-          ...
-        }
-
-        var dict = o as Dictionary<string, object>;
-        var promises = new List<Promise>();
-        var fulfillments = new List<KeyValuePair<IDType, object>>();
-
-        var gr = new GraphRoot
-        {
-          n1s = o["n1s"].Select(n1_clr =>
-          {
-            var n1_r = Node1Coder.LoadFromCLR(n1_clr);
-            promises.AddRange(n1_r.promises);
-            fulfillments.AddRange(n1_r.fulfillments);
-            return n1_r.result;
-          }).ToArray(),
-          n2s = o["n2s"].Select(n2_clr =>
-          {
-            var n2_r = Node2Coder.LoadFromCLR(n2_clr);
-            promises.AddRange(n2_r.promises);
-            fulfillments.AddRange(n2_r.fulfillments);
-            return n2_r.result;
-          }).ToArray()
-        };
-
-        return new Result
-        {
-          result = gr,
-          promises = promises,
-          fulfillments = fulfillments
-        };
-      }
-
-      public override object MarshalToCLR(GraphRoot gr)
-      {
-        return new Dictionary<string, object>()
-        {
-          { "n1s", gr.n1s
-                    .Select(n1 => Node1Coder.MarshalToCLR(n1))
-                    .ToArray() },
-          { "n2s", gr.n2s
-                    .Select(n2 => Node2Coder.MarshalToCLR(n2))
-                    .ToArray() }
-        };
-      }
-    }
-
-    // Node1.cs
-
-    public class Node1
-    {
-      public Node2[] n2s;
-    }
-
-    // Node2.cs
-
-    public class Node2
-    {
-      public IDType id;
-      public uint ui1;
-    }
+So, our graph from before might be [written a little differently][zoo].
 
 [sjson]: http://wiki.unity3d.com/index.php/SimpleJSON "Unify Wiki: SimpleJson"
+[zoo]: https://github.com/mysteriouspants/zoocoder-example

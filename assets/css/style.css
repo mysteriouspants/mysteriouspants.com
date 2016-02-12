@@ -55,6 +55,7 @@ body {
 	color: #666;
 	-webkit-font-smoothing: antialiased;
 	text-rendering: optimizeLegibility;
+  background: url('../images/noise.png') repeat scroll left top #fafafa;
 }
 
 h1 {
@@ -305,16 +306,16 @@ pre	{
 	white-space:pre-wrap;
 	/*border: 1px solid #ddd;*/
 	padding:20px;
-	background-color:#fdfdfd;
+	/*background-color:#fff;*/
 	/*font-size:14px;*/
 	overflow:auto;
 	border-radius: 3px;
-	background: #272b2d;
+	/*background: #fff;*/
 	  font-family: 'Source Code Pro',Menlo,monospace;
 	  font-size: 13px;
 	  line-height: 1.5em;
 	  font-weight: 500;
-	color: #d0d4d7;
+	/*color: #d0d4d7;*/
 
 }
 
