@@ -30,7 +30,7 @@ gap between science fiction and science reality.
 
 "I have a 3 year old now, and I told him before I left that I was going
 to go see a Spaceship, and I think he thought I was lying. He knows the
-Millennium Falcon is a spaceship, but that it's also pretend. Atlantis
+Millennium Falcon is a spaceship, but that it's also pretend. *Atlantis*
 was real. I saw it with my own eyes with a tower of fire underneath it.
 It shook my body and I hope my sons have something to inspire them the
 same way.
