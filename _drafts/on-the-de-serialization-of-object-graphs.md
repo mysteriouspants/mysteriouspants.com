@@ -25,7 +25,7 @@ The solution is to use [SimpleJson][sjson] to parse the actual data payload, the
 
 The use of that *t*-word is very deliberate, 314, as it segues to the overall architecture used in this endeavor, which is ETL, or Extract-Transform-Load. In this case, the extraction is handled by SimpleJson, the Transformation turns those SimpleJson result objects into .NET standard containers, and finally a clever coder pattern loads that into the set of objects that will run in my program (in this case, a physiology simulation).
 
-I do hope that you never find yourself in a situation such as mine, 314, but I am not optimistic, so here detailed is the product of about a year's worth of work in this field, condensed in a blog post for you. If you find yourself in a similar situation, please learn all you can from my experience so that your own path may be much shorter and more effecient!
+I do hope that you never find yourself in a situation such as mine, 314, but I am not optimistic, so here detailed is the product of about a year's worth of work in this field, condensed in a blog post for you. If you find yourself in a similar situation, please learn all you can from my experience so that your own path may be much shorter and more efficient!
 
 # Transform
 
@@ -115,7 +115,7 @@ Note that the case for `IEnumerable` comes last because `string` implements `IEn
 
 # Load
 
-The first reaction to loading is to write a method for each type of object (class) that needs to be loaded. I handled references between objects by capturing the code to set the reference in a closure, then storing those closures and calling them promises. Simultaneously, even load of an object that could fulfill a promise was collected, connecting the two as the process continues. Unfulfilled promises can be logged and recorded as errors.
+The first reaction to loading is to write a method for each type of object (class) that needs to be loaded. I handled references between objects by capturing the code to set the reference in a closure, then storing those closures and calling them promises. Simultaneously, every load of an object that could fulfill a promise was collected, connecting the two as the process continues. Unfulfilled promises can be logged and recorded as errors.
 
 This created a partial class spread across many files which was extremely hard to follow, even for me - who wrote the goofy thing.
 
@@ -201,19 +201,19 @@ var zoo = res.result; // done!
 To illustrate, the following JSON might be parsed so:
 
 ~~~ json
-{ "type": "zoo",
+{ "type":             "zoo",
   "animals": [
-    { "type": "elephant",
-      "preferredFeed": 1,
-      "trunkLength": 13 },
-    { "type": "walrus",
-      "preferredFeed": 2,
-      "weight": 900 } ],
+    { "type":         "elephant"
+    , "preferredFeed": 1
+    , "trunkLength":   13 }
+  , { "type":         "walrus"
+    , "preferredFeed": 2
+    , "weight":        900 } ],
   "feed": [
-    { "id": 1,
-      "name": "peanuts" },
-    { "id": 2,
-      "name": "fish" } ] }
+    { "id":            1
+    , "name":         "peanuts" }
+  , { "id":            2
+    , "name":         "fish" } ] }
 ~~~
 
 So, our graph from before might be [written a little differently][zoo].
