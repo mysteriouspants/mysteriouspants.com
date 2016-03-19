@@ -9,17 +9,19 @@ The thesis of this topic is eloquently captured by Eleanor Roosevelt, who said t
 
 > Great minds discuss ideas; average minds discuss events; small minds discuss people. -- Eleanor Roosevelt
 
-It smarts, doesn't it? That feeling of "oh no, I've been small minded!" Just wait a moment, 314, for it will pass. Now we can go about turning you into a great mind. Contrary to prevailing perception, you don't need to be very smart to possess a great mind.
+It smarts, doesn't it? That feeling of "oh no, I've been small minded!" I know that feeling well, 314, for I've been small-minded, too. Just wait a moment, it will pass. Now we can go about turning you into a great mind. Contrary to prevailing perception, you don't even need to be smart to possess a great mind.
 
 Firstly, we'll explore small mindedness and how to identify it. As wonderful as our former First Lady's quote is, we'll skip average-mindedness, heading straight to the meat of the matter, which is how to have a great mind.
 
+Before we begin, however, do not despair if you find yourself of a small mind. Retraining how you think and communicate is one of the harder things to do. Just pick yourself back up and keep at it. After all, sands do not shift overnight, but they do shift.
+
 # Small minds discuss people
 
-Whether that's Barak Obama, George W. Bush, Hillary Clinton, Ted Cruz, or Donald Trump, above all, resist the urge to talk *about* people. Sure, Ted's face looks weird, Donald Trump's hair is strange, and Bernie Sander's is one electrocution away from a lead role in *Back to the Future*, but that's all secondary.
+Whether that's Barak Obama, George W. Bush, Hillary Clinton, Ted Cruz, or Donald Trump, above all, resist the urge to talk *about* people. Sure, Ted's face looks weird, Donald Trump's hair is strange, and Bernie Sander's is one electrocution away from a lead role in *Back to the Future*, but that's all irrelevant.
 
 You've seen this in spades if you have a Facebook account and any friends on it. People warning you to not vote for Trump, people pleading with you to vote for Sanders. After that post you have learned but one thing: the preferences of the person speaking.
 
-Perhaps most of all, resist the base urge to decry supporters of opposing candidates. To the honest Trump supporter, the statement "I can't believe how stupid someone must be to vote for Trump" can only elicit the response of "Well, I don't care two cents what you think, but now that you've called me a fool, I'll follow that campaign to the bitter end or to the White House." Name calling only cements people's thinking, which is probably the opposite of what you're trying to do.
+Perhaps most of all, resist the base urge to decry supporters of opposing candidates. For example, to the honest Trump supporter, the statement "I can't believe how stupid someone must be to vote for Trump" can only elicit the response of "Well, I don't care two cents what you think, but now that you've called me a fool, I'll follow that campaign to the bitter end or to the White House." A similar reaction will be elicited from the honest Sanders supporter when called an America-hating communist. Neither are true. Name calling only cements people's thinking, which is probably the opposite of what you're trying to do.
 
 # Great minds discuss ideas
 
@@ -28,7 +30,7 @@ Ideas breed understanding, and a great mind understands much. A great mind is al
 The scientific process in political discourse goes something like this:
 
 1.   *Identify claims.* This is where you can get in trouble, as what some believe as axiomatic can be regarded by yet others as patently false. If there's contention, it's a claim. But don't worry, we will next determine truth.
-2.   *Determine the truth of those claims.* Go to trusted sources! For most Facebook debates Snopes and similar sites are plenty enough to debunk the ridiculous (Snopes-bombing people on Facebook is one of my more favorite pass-times). For the rest, seek out independent researchers. Become an expert at vetting sources of information - it's not hard, just follow the sponsorships and funding. Not everything that comes out of partisan think-tanks is false, so don't discount information, either. And, as always, carefully read for partisan "spin" in any article. Pay attention to statistics doctoring (y-axis scaling, and so on), and what information they aren't sharing.
+2.   *Determine the truth of those claims.* Go to trusted sources! For most Facebook debates Snopes and similar sites are plenty enough to debunk the ridiculous (Snopes-bombing people on Facebook is one of my more favorite pass-times). For the rest, seek out independent researchers. Become an expert at vetting sources of information - it's not hard, just follow the sponsorships and funding. Reputable and honest research will always disclose the sources of their information, or how they gathered what original data they are presenting. Not everything that comes out of partisan think-tanks is false, so don't discount information, either. And, as always, carefully read for partisan "spin" in any article. Pay attention to statistics doctoring (y-axis scaling, and so on), and what information they aren't sharing.
 3.   *Determine how the person you're communicating with values those truths.* A great example of this is the divisiveness on the topic of abortion. Pro-choice people place incredible value on the rights of the woman, whereas pro-life people place that value on the life of the unborn child. Neither are empirically wrong, but in making public policy and in public discourse we need to discover the values of others then change your mind, or agree to disagree.
 4.   *Change your mind, or agree to disagree.* Key phrases include "I see what you mean, but..." and "I hadn't thought of it that way." *The discussion is now over.*
 
