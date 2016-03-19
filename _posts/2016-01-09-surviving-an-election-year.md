@@ -1,5 +1,5 @@
 ---
-title:    How to Survive and Election Year
+title:    How to Survive an Election Year
 date:     2016-03-18 16:43
 ---
 
