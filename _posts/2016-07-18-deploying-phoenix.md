@@ -81,18 +81,24 @@ Next configure Nginx to reverse proxy to port `4001`. Be sure to replace the
 IP address with the public IP address of your production server.
 
     vim /etc/nginx/sites-available/my-app.com
+      map $http_upgrade $connection_upgrade {
+        default upgrade;
+        '' close;
+      }
+      
       server {
-        listen 80;
+        listen 80 http2;
         server_name my-app.com;
 
         access_log off;
 
         location / {
           proxy_pass http://127.0.0.1:4001;
-          proxy_set_header Host $host;
-          proxy_set_header X-Real-IP $remote_addr;
-          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-          proxy_set_header X-Forwarded-Proto $scheme;  
+          
+          include proxy_params;
+          
+          proxy_set_header Upgrade $http_upgrade;
+          proxy_set_header Connection $connection_upgrade;
         }
       }
     ln -s /etc/nginx/sites-{available,enabled}/my-app.com
