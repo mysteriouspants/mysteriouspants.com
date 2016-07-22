@@ -3,19 +3,45 @@ title:    Deploying Elixir/Phoenix
 date:     2016-07-18 16:38
 ---
 
-Well 314, it has been a while, has it not? I have recently completed a bit of an adventure (or completed the adventure nearly enough to share, at any rate). I've gone and fallen in love with the [Elixir programming language][elixir0], and the star of the Elixir world right now is [Phoenix][phoenix0], a web framework. Now, cutting websites it's nearly as sexy as it was in the late nineties, but this nearly makes up for it.
+Well 314, it has been a while, has it not? I have recently completed a
+bit of an adventure (or completed the adventure nearly enough to share,
+at any rate). I've gone and fallen in love with the [Elixir programming
+language][elixir0], and the star of the Elixir world right now is
+[Phoenix][phoenix0], a web framework. Now, cutting websites it's nearly
+as sexy as it was in the late nineties, but this nearly makes up for it.
 
-Phoenix's one-two punch of a Rails-ish paradigm and a nice database layer in Ecto makes it a true joy to work with. Where Phoenix gains on Rails, however, is in Elixir, a language which keeps much of the happiness of Ruby while handing you the speed of Erlang. Even on database-backed pages Phoenix returns pages in tens of milliseconds.
+Phoenix's one-two punch of a Rails-ish paradigm and a nice database
+layer in Ecto makes it a true joy to work with. Where Phoenix gains on
+Rails, however, is in Elixir, a language which keeps much of the
+happiness of Ruby while handing you the speed of Erlang. Even on
+database-backed pages Phoenix returns pages in tens of milliseconds.
 
-So it's some hot stuff, and it makes me happy. But with all web apps, there comes a time when running it on my laptop is not enough. So I embarked upon a journey to learn to deploy Elixir/Phoenix apps to a server using [edeliver][edeliver0] and exrm.
+So it's some hot stuff, and it makes me happy. But with all web apps,
+there comes a time when running it on my laptop is not enough. So I
+embarked upon a journey to learn to deploy Elixir/Phoenix apps to a
+server using [edeliver][edeliver0] and exrm.
 
 ---
 
-The overall model of deployment is to commit and push code to your source repository. edeliver will then pull that to a build server (a server that resembles your production server - in OS and architecture, so you can build a compatible package). On this build server it uses exrm to compile a release (or upgrade, which can patch your running code - pretty dope), and downloads that to your computer. You then upload this package to your production server(s).
+The overall model of deployment is to commit and push code to your
+source repository. edeliver will then pull that to a build server (a
+server that resembles your production server - in OS and architecture,
+so you can build a compatible package). On this build server it uses
+exrm to compile a release (or upgrade, which can patch your running code
+- pretty dope), and downloads that to your computer. You then upload
+this package to your production server(s).
 
-These exrm releases themselves are pretty cool. They are self-contained releases, they include an Erlang VM, all the package and dependencies to make your app run. Gone are the days of hammering rubygems.org from three dozen machines every deploy!
+These exrm releases themselves are pretty cool. They are self-contained
+releases, they include an Erlang VM, all the package and dependencies to
+make your app run. Gone are the days of hammering rubygems.org from
+three dozen machines every deploy!
 
-For my build server, I simply set up a new user account on my Digital Ocean droplet, running Ubuntu Linux, which runs this site and my IRC bouncer. My production server was similarly yet another account on this server. edeliver, however, supports a plurality of production servers. Cleverly, it uses SSH, so you can use keys to make things happen without a single password getting in the way.
+For my build server, I simply set up a new user account on my Digital
+Ocean droplet, running Ubuntu Linux, which runs this site and my IRC
+bouncer. My production server was similarly yet another account on this
+server. edeliver, however, supports a plurality of production servers.
+Cleverly, it uses SSH, so you can use keys to make things happen without
+a single password getting in the way.
 
 # Setting up a Build Server
 
@@ -83,29 +109,35 @@ template.
         template: "template0",
         pool_size: 10
 
-I'll leave the configuration of your PostgreSQL server to you - there are plenty of tutorials and how-to's for it. Suffice it to say, you should substitute real values where I have left placeholders.
+I'll leave the configuration of your PostgreSQL server to you - there
+are plenty of tutorials and how-to's for it. Suffice it to say, you
+should substitute real values where I have left placeholders.
 
 # Setting up a Production Server
 
-Some of these steps will be identical to the steps performed on the build server. If these servers are the same, you can safely skip the redundant steps.
+Some of these steps will be identical to the steps performed on the
+build server. If these servers are the same, you can safely skip the
+redundant steps.
 
-First, SSH to the new production server as `root` or a `sudo`-capable user. First we'll install Elixir and some Erlang dependencies, as well as PostgreSQL. Again, if this isn't your database host, then you might try omitting some. Also, I'm not too sure if the Erlang dependencies are even necessary. If someone does know, please drop me a message.
+First, SSH to the new production server as `root` or a `sudo`-capable
+user. First we'll install Elixir and some Erlang dependencies, as well
+as PostgreSQL. Again, if this isn't your database host, then you might
+try omitting some. Also, I'm not too sure if the Erlang dependencies are
+even necessary. If someone does know, please drop me a message.
 
-    wget https://packages.erlang-solutions.com/erlang-solutions_1.0_all.deb && dpkg -i erlang-solutions_1.0_all.deb
-    apt-get update
-    apt-get install elixir postgresql erlang-base-hipe erlang-parsetools
-    useradd -s /bin/bash my-app-prod
-    mkdir -p ~my-app-prod/.ssh
-    # add relevant keys to ~my-app-prod/.ssh/authorized_keys
-    chown -R my-app-prod:users ~my-app-prod
+    useradd -s /bin/bash my-app
+    mkdir -p ~my-app/.ssh
+    # add relevant keys to ~my-app/.ssh/authorized_keys
+    chown -R my-app:users ~my-app
 
-On deploy and start the application will be running on port `4001`, so firewall
-that sucker up.
+On deploy and start the application will be running on port `4001` or
+whatever port you configure in your `prod.exs` file, so firewall that
+sucker up.
 
     ufw deny 4001
 
-Next configure Nginx to reverse proxy to port `4001`. Be sure to replace the
-IP address with the public IP address of your production server.
+Next configure Nginx to reverse proxy to port `4001`. Be sure to replace
+the IP address with the public IP address of your production server.
 
     vim /etc/nginx/sites-available/my-app.com
       map $http_upgrade $connection_upgrade {
@@ -131,17 +163,17 @@ IP address with the public IP address of your production server.
     ln -s /etc/nginx/sites-{available,enabled}/my-app.com
     service nginx reload
 
-Finally, set the app to autostart on machine boot. So that random things like
-rebooting for a kernel update doesn't leave the app high and dry until someone
-pokes you on Slack.
+Finally, set the app to autostart on machine boot. So that random things
+like rebooting for a kernel update doesn't leave the app high and dry
+until someone pokes you on Slack.
 
     vim /etc/init.d/my-app-prod.conf
       description "my-app-prod"
 
       ## Uncomment the following two lines to run the
       ## application as www-data:www-data
-      setuid my-app-prod
-      setgid my-app-prod
+      setuid my-app
+      setgid my-app
 
       start on runlevel [2345]
       stop on runlevel [016]
@@ -157,23 +189,25 @@ pokes you on Slack.
       # env PORT=4001
       # export PORT
 
-      env HOME=/home/my-app-prod/my_app
+      env HOME=/home/my-app/my_app
       export HOME
 
-      pre-start exec /bin/sh /home/my-app-prod/my_app/bin/my_app start
+      pre-start exec /bin/sh /home/my-app/my_app/bin/my_app start
 
-      post-stop exec /bin/sh /home/my-app-prod/my_app/bin/my_app stop
+      post-stop exec /bin/sh /home/my-app/my_app/bin/my_app stop
 
 # Configuring your Phoenix Project
 
-There isn't a whole lot to do here, but some of these steps are important and missing one can lead to about a day of very confused debugging.
+There isn't a whole lot to do here, but some of these steps are
+important and missing one can lead to about a day of very confused
+debugging.
 
     vim config/prod.exs
       use Mix.Config
 
       config :my_app, MyApp.Endpoint,
-        http: [port: 4001],
-        url: [host: "my_app.com", port: 8080],
+        http: [port: 4001], # configure the port to rproxy to here!
+        url: [host: "my_app.com", port: 80],
         cache_static_manifest: "priv/static/manifest.json",
         server: true # DON'T FORGET THIS LINE
 
@@ -181,9 +215,11 @@ There isn't a whole lot to do here, but some of these steps are important and mi
 
       import_config "prod.secret.exs"
 
-There will be a mess of comments in there, I haven't explored what they all do yet.
+There will be a mess of comments in there, I haven't explored what they
+all do yet.
 
-The next file to change is `mix.exs`, which you need to add edeliver to as a dependency.
+The next file to change is `mix.exs`, which you need to add edeliver to
+as a dependency.
 
     vim mix.exs
       # ...
@@ -207,7 +243,12 @@ The next file to change is `mix.exs`, which you need to add edeliver to as a dep
          {:edeliver, "~> 1.2.10"}]
       end
 
-You'll notice that we've added edeliver to both applications and deps. Note that there is a release version in this file. You can and should increment that from time to time. It'll show up in your builds - speaking of which, we need to configure edeliver to know about all the work we've just done! Do this by creating an edeliver configuration file, that should look something like this:
+You'll notice that we've added edeliver to both applications and deps.
+Note that there is a release version in this file. You can and should
+increment that from time to time. It'll show up in your builds -
+speaking of which, we need to configure edeliver to know about all the
+work we've just done! Do this by creating an edeliver configuration
+file, that should look something like this:
 
     mkdir -p .deliver
     vim .deliver/config
@@ -232,8 +273,8 @@ You'll notice that we've added edeliver to both applications and deps. Note that
       TEST_AT="/home/my-app-stage"
 
       PRODUCTION_HOSTS="my-app.com"
-      PRODUCTION_USER="my-app-prod"
-      DELIVER_TO="/home/my-app-prod"
+      PRODUCTION_USER="my-app"
+      DELIVER_TO="/home/my-app"
 
       # runs the phoenix.digest mix command, which gets rid of a missing
       # manifest file error
@@ -277,9 +318,13 @@ Copy the release tag from the output, and deploy that sucker.
 
 ---
 
-All that work, but look at what was gained! A very slick deployment process that encourages sustainable versioning. These have been my notes from the adventure, which I hope you benefit from in some way. If you find any error, I encourage you to let me know, preferably by making a [pull request on this file][pr0] with the fix.
+All that work, but look at what was gained! A very slick deployment
+process that encourages sustainable versioning. These have been my notes
+from the adventure, which I hope you benefit from in some way. If you
+find any error, I encourage you to let me know, preferably by making a
+[pull request on this file][pr0] with the fix.
 
-Happy coding, 314!
+Happy coding, and more importantly, happy deploying, 314!
 
 [asdf0]: https://github.com/asdf-vm/asdf
 [elixir0]: http://elixir-lang.org/
