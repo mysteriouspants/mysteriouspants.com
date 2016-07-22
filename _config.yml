@@ -8,9 +8,9 @@ markdown:          kramdown
 highlighter:       rouge
 
 baseurl:
-domain_name:       http://mysteriouspants.com
+domain_name:       http://www.mysteriouspants.com
 
-url:               http://mysteriouspants.com
+url:               http://www.mysteriouspants.com
 githubRepo:        mysteriouspants/mysteriouspants.com
 
 default_author:    Christopher R. Miller
@@ -19,7 +19,7 @@ authors:
         name:      Christopher R. Miller
         twitter:   mysterytrousers
         github:    mysteriouspants
-        avatar:    avatar.png
+        avatar:    xpm.png
         about:     Computer scientist, humorist, and something of a math geek.
 
 permalink:         /blog/:year/:month/:title/
