@@ -112,7 +112,7 @@ IP address with the public IP address of your production server.
         default upgrade;
         '' close;
       }
-      
+
       server {
         listen 80 http2;
         server_name my-app.com;
@@ -121,9 +121,9 @@ IP address with the public IP address of your production server.
 
         location / {
           proxy_pass http://127.0.0.1:4001;
-          
+
           include proxy_params;
-          
+
           proxy_set_header Upgrade $http_upgrade;
           proxy_set_header Connection $connection_upgrade;
         }
@@ -281,6 +281,7 @@ All that work, but look at what was gained! A very slick deployment process that
 
 Happy coding, 314!
 
+[asdf0]: https://github.com/asdf-vm/asdf
 [elixir0]: http://elixir-lang.org/
 [phoenix0]: http://www.phoenixframework.org/
 [edeliver0]: https://github.com/boldpoker/edeliver
