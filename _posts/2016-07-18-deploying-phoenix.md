@@ -21,28 +21,55 @@ For my build server, I simply set up a new user account on my Digital Ocean drop
 
 SSH to the server as `root` or any `sudo`-capable user.
 
-This step will add some Erlang-specific package repositories to your machine's `apt-get` sources.
+We'll be using [asdf][asdf0] to manage our development dependencies
+(erlang, elixir, and nodejs). This allows us to install a plurality of
+versions in case you have to build different projects requiring
+different versions from the same build user.
 
-    wget https://packages.erlang-solutions.com/erlang-solutions_1.0_all.deb && dpkg -i erlang-solutions_1.0_all.deb
-    apt-get update
+First we'll install some prerequisites via `apt`.
 
-Next we'll install some basic dependencies. You can omit `postgresql` if you're planning to run your database on a different server - although you might need some odd dev dependency. If you try it, let me know how it goes.
+    apt-get install git vim unzip
+    apt-get install build-essential autoconf m4 libncurses5-dev
+    apt-get install libwxgtk3.0-dev libgl1-mesa-dev libglu1-mesa-dev
+    apt-get install libpng3 libssh-dev unixodbc-dev
+    update-alternatives --set editor /usr/bin/vim.basic
 
-    apt-get install elixir postgresql erlang-base-hipe build-essential erlang-dev erlang-parsetools nodejs
+Now create a build user.
 
-Now we'll create the user that builds will execute under, and add the relevant SSH keys. I copyied my key from the root user's authorized keys, but it might be a good idea to create some kind of specific build key.
+    useradd --shell=/bin/bash build
 
-    useradd -s /bin/bash build
-    mkdir -p ~build/.ssh
-    chown -R build:users ~build
+You should install any applicable SSH key for the `build` user into
+`~build/.ssh/authorized_keys` now.
 
-Now SSH to the server as `build`. We'll install hex and phoenix.
+Login as the `build` user now and install asdf and its plugins.
+
+    git clone https://github.com/asdf-vm/asdf.git ~/.asdf
+    echo '. $HOME/.asdf/asdf.sh' >> ~/.profile
+    echo '. $HOME/.asdf/completions/asdf.bash' >> ~/.profile
+    source ~/.profile
+    asdf plugin-add erlang https://github.com/asdf-vm/asdf-erlang.git
+    asdf plugin-add elixir https://github.com/asdf-vm/asdf-elixir.git
+    asdf plugin-add nodejs https://github.com/asdf-vm/asdf-nodejs.git
+
+This next step will install the actual tools. This can take a while, so
+I suggest separating each command by a comma, then running off to get
+something to eat. It can take a moment.
+
+    asdf install erlang 19.0
+    asdf install elixir 1.3.1
+    asdf install nodejs 6.3.1
+    asdf global erlang 19.0
+    asdf global elixir 1.3.1
+    asdf global nodejs 6.3.1
+
+If this worked, then installing Hex and Rebar will work.
 
     mix local.hex
-    mix archive.install https://github.com/phoenixframework/archives/raw/master/phoenix_new.ez
+    mix local.rebar
 
-Create the `my-app_prod.secret.exs` file, which should follow
-the following template.
+Your build server is almost ready to get to work! Create the
+`my-app_prod.secret.exs` file, which should follow the following
+template.
 
     vim my-app_prod.secret.exs
       use Mix.Config
@@ -56,7 +83,7 @@ the following template.
         template: "template0",
         pool_size: 10
 
-I'll leave the configuration of your PostgreSQL server to you - there are plenty of tutorials and how-to's for it.
+I'll leave the configuration of your PostgreSQL server to you - there are plenty of tutorials and how-to's for it. Suffice it to say, you should substitute real values where I have left placeholders.
 
 # Setting up a Production Server
 
