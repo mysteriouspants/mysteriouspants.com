@@ -6,8 +6,6 @@ contactPage:       true
 
 markdown:          kramdown
 highlighter:       rouge
-kramdown:
-    input:         gfm
 
 baseurl:
 domain_name:       http://mysteriouspants.com
