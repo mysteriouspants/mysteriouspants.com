@@ -82,11 +82,18 @@ I suggest separating each command by a comma, then running off to get
 something to eat. It can take a moment.
 
     asdf install erlang 19.0
+    asdf global  erlang 19.0
     asdf install elixir 1.3.1
+    asdf global  elixir 1.3.1
     asdf install nodejs 6.3.1
-    asdf global erlang 19.0
-    asdf global elixir 1.3.1
-    asdf global nodejs 6.3.1
+    addf global  nodejs 6.3.1
+
+**Note:** Erlang requires somewhere slightly north of 1GB of RAM to
+build successfully, or it dies somewhere in a WxWidgets library compile.
+I suggest that you [enable a swapfile][doswap0] during the build if you
+have less than 2GB of free RAM before starting the build. As this will
+degrade the SSD hardware you're probably running on, I suggest you
+remove the swapfile after the build is completed.
 
 If this worked, then installing Hex and Rebar will work.
 
@@ -331,3 +338,4 @@ Happy coding, and more importantly, happy deploying, 314!
 [phoenix0]: http://www.phoenixframework.org/
 [edeliver0]: https://github.com/boldpoker/edeliver
 [pr0]: https://github.com/mysteriouspants/mysteriouspants.com/blob/master/_posts/2016-07-18-deploying-phoenix.md
+[doswap0]: https://www.digitalocean.com/community/tutorials/how-to-add-swap-space-on-ubuntu-16-04
