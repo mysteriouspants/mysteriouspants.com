@@ -1,4 +1,10 @@
 #!/bin/sh
 
-rsync -avz _site/ xpm@mysteriouspants.com:/var/www/www.mysteriouspants.com/
-ssh xpm@mysteriouspants.com chmod -R ugo+rx /var/www/www.mysteriouspants.com
+REMOTE_USER=xpm
+REMOTE_HOST=mysteriouspants.com
+REMOTE_PATH=/var/www/www.mysteriouspants.com
+
+bundle exec jekyll build
+
+rsync -avz _site/ ${REMOTE_USER}@${REMOTE_HOST}:${REMOTE_PATH}/
+ssh ${REMOTE_USER}@${REMOTE_HOST} chmod -R ugo+rx ${REMOTE_PATH}
