@@ -28,7 +28,7 @@ paginate:          9999
 paginate_path:     /blog/page/:num/
 gems:            [ jekyll-paginate, jekyll-sitemap ]
 
-exclude:         [ README.md, COPYING.md, Gemfile, Gemfile.lock ]
+exclude:         [ README.md, COPYING.md, Gemfile, Gemfile.lock, publish.sh ]
 timezone:          America/Los_Angeles
 encoding:          utf-8
 
