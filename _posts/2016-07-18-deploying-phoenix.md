@@ -3,6 +3,10 @@ title:    Deploying Elixir/Phoenix
 date:     2016-07-18 16:38
 ---
 
+*This page last updated 31 August 2016 to fix an erroneous Nginx
+configuration and to add the pattern for how you'd handle SSL/HTTP2
+redirection with Let's Encrypt*.
+
 Well 314, it has been a while, has it not? I have recently completed a
 bit of an adventure (or completed the adventure nearly enough to share,
 at any rate). I've gone and fallen in love with the [Elixir programming
@@ -153,10 +157,28 @@ the IP address with the public IP address of your production server.
       }
 
       server {
-        listen 80 http2;
+        listen 80;
         server_name my-app.com;
 
         access_log off;
+
+        location /.well-known {
+          root /var/www/letsencrypt;
+          try_files $uri /dev/null =404;
+        }
+
+        location / {
+          return 301 https://$host$request_uri;
+        }
+      }
+
+      server {
+        listen 443 ssl http2;
+        server_name my-app.com;
+        access_log off;
+
+        ssl_certificate /etc/letsencrypt/live/my-app.com/fullchain.pem;
+        ssl_certificate_key /etc/letsencrypt/live/my-app.com/privkey.pem;
 
         location / {
           proxy_pass http://127.0.0.1:4001;
