@@ -1,5 +1,5 @@
 ---
-title:    "Notebook: Let's Encrypt on Nginx Setup"
+title:    "Let's Encrypt on Nginx Setup"
 date:     2016-08-31 5:21
 ---
 
