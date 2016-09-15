@@ -308,6 +308,26 @@ file, that should look something like this:
       # runs the phoenix.digest mix command, which gets rid of a missing
       # manifest file error
       pre_erlang_clean_compile() {
+        status "Installing NodeJS dependencies"
+        __sync_remote "
+          [ -f ~/.profile ] && source ~/.profile # load profile (optional)
+          set -e # fail if any command fails (recommended)
+          cd '$BUILD_AT' # enter the build directory on the build host (required)
+          # prepare something
+          mkdir -p priv/static # required by the phoenix.digest task
+          # run your custom task
+          APP='$APP' MIX_ENV='$TARGET_MIX_ENV' npm install
+        "
+        status "Building frontend items"
+        __sync_remote "
+          [ -f ~/.profile ] && source ~/.profile # load profile (optional)
+          set -e # fail if any command fails (recommended)
+          cd '$BUILD_AT' # enter the build directory on the build host (required)
+          # prepare something
+          mkdir -p priv/static # required by the phoenix.digest task
+          # run your custom task
+          APP='$APP' MIX_ENV='$TARGET_MIX_ENV' npm run deploy
+        "
         status "Running phoenix.digest" # log output prepended with "----->"
         __sync_remote " # runs the commands on the build host
           [ -f ~/.profile ] && source ~/.profile # load profile (optional)
