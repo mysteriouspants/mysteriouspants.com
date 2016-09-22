@@ -14,11 +14,11 @@ well.
 
 First, install Let's Encrypt.
 
-    apt install letsencrypt
+    sudo apt install -y letsencrypt
 
 For every domain, modify the virtual server definition to look like this:
 
-    vim /etc/nginx/sites-available/mysteriouspants.com
+    sudo vim /etc/nginx/sites-available/mysteriouspants.com
       # a reflector domain that just redirects to www.,
       # and serves .well-known files
       server {
@@ -34,10 +34,21 @@ For every domain, modify the virtual server definition to look like this:
         }
 
         location / {
-          return 301 https://$host$request_uri;
+          return 301 https://www.$host$request_uri;
         }
       }
-    vim /etc/nginx/sites-available/www.mysteriouspants.com
+
+      server {
+        listen 443 ssl http2;
+        server_name mysteriouspants.com;
+        access_log off;
+
+        ssl_certificate /etc/letsencrypt/live/mysteriouspants.com/fullchain.pem;
+        ssl_certificate_key /etc/letsencrypt/live/mysteriouspants.com/privkey.pem;
+
+        return 301 https://www.$host$request_uri;
+      }
+    sudo vim /etc/nginx/sites-available/www.mysteriouspants.com
       server {
         listen 80;
         server_name www.mysteriouspants.com;
@@ -65,13 +76,13 @@ For every domain, modify the virtual server definition to look like this:
 
         root /var/www/www.mysteriouspants.com;
       }
-    service nginx reload
+    sudo service nginx reload
 
 Make some directories. The `empty` directory in particular is for the
 root of the redirection mirrors.
 
-    mkdir /var/www/empty
-    mkdir /var/www/letsencrypt
+    sudo mkdir /var/www/empty
+    sudo mkdir /var/www/letsencrypt
 
 Actually grab your first SSL certificate. It will ask you to accept a
 EULA, then it will populate `/var/www/letsencrypt` with some challenge
@@ -79,7 +90,7 @@ files. Their servers will ask your domains for those files to prove that
 you control the domains - so they're not just handing out certificates
 willy-nilly.
 
-    letsencrypt certonly --webroot -w /var/www/letsencrypt \
+    sudo letsencrypt certonly --webroot -w /var/www/letsencrypt \
       -d mysteriouspants.com \
       -d www.mysteriouspants.com
 
@@ -90,14 +101,14 @@ At this point, your web pages are actually SSL'd now that your SSL
 certificates exist. Harden up your Nginx server by adding this set of
 ciphers I totally didn't just pull off some webpage.
 
-    vim /etc/nginx/nginx.conf
+    sudo vim /etc/nginx/nginx.conf
       ssl_ciphers EECDH+CHACHA20:EECDH+AES128:RSA+AES128:EECDH+AES256:RSA+AES256:EECDH+3DES:RSA+3DES:!MD5;
 
 Finally, Let's Encrypt certificates are only good for 90 days, so it's
 best to renew them. They suggest twice a day, which is super easy to do
 via a simple cron task.
 
-    vim /etc/cron.d/letencrypt
+    sudo vim /etc/cron.d/letencrypt
       0 0,12 * * * * letsencrypt renew
 
 And there you have it.

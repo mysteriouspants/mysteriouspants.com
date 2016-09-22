@@ -3,9 +3,9 @@ title:    Deploying Elixir/Phoenix
 date:     2016-07-18 16:38
 ---
 
-*This page last updated 31 August 2016 to fix an erroneous Nginx
-configuration and to add the pattern for how you'd handle SSL/HTTP2
-redirection with Let's Encrypt*.
+*This page is something of a living blog post, and it does get updated
+from time to time. I suggest you look at the [file's history][gitlog0]
+if you need to know how fresh/stale this guide is.*.
 
 Well 314, it has been a while, has it not? I have recently completed a
 bit of an adventure (or completed the adventure nearly enough to share,
@@ -58,15 +58,15 @@ different versions from the same build user.
 
 First we'll install some prerequisites via `apt`.
 
-    apt-get install git vim unzip
-    apt-get install build-essential autoconf m4 libncurses5-dev
-    apt-get install libwxgtk3.0-dev libgl1-mesa-dev libglu1-mesa-dev
-    apt-get install libpng3 libssh-dev unixodbc-dev
-    update-alternatives --set editor /usr/bin/vim.basic
+    sudo apt-get install -y git vim unzip \
+        build-essential autoconf m4 libncurses5-dev \
+        libwxgtk3.0-dev libgl1-mesa-dev libglu1-mesa-dev \
+        libpng3 libssh-dev unixodbc-dev
+    sudo update-alternatives --set editor /usr/bin/vim.basic
 
 Now create a build user.
 
-    useradd --shell=/bin/bash build
+    sudo useradd --shell=/bin/bash build
 
 You should install any applicable SSH key for the `build` user into
 `~build/.ssh/authorized_keys` now.
@@ -136,21 +136,21 @@ as PostgreSQL. Again, if this isn't your database host, then you might
 try omitting some. Also, I'm not too sure if the Erlang dependencies are
 even necessary. If someone does know, please drop me a message.
 
-    useradd -s /bin/bash my-app
-    mkdir -p ~my-app/.ssh
+    sudo useradd -s /bin/bash my-app
+    sudo mkdir -p ~my-app/.ssh
     # add relevant keys to ~my-app/.ssh/authorized_keys
-    chown -R my-app:users ~my-app
+    sudo chown -R my-app:users ~my-app
 
 On deploy and start the application will be running on port `4001` or
 whatever port you configure in your `prod.exs` file, so firewall that
 sucker up.
 
-    ufw deny 4001
+    sudo ufw deny 4001
 
 Next configure Nginx to reverse proxy to port `4001`. Be sure to replace
 the IP address with the public IP address of your production server.
 
-    vim /etc/nginx/sites-available/my-app.com
+    sudo vim /etc/nginx/sites-available/my-app.com
       map $http_upgrade $connection_upgrade {
         default upgrade;
         '' close;
@@ -189,14 +189,14 @@ the IP address with the public IP address of your production server.
           proxy_set_header Connection $connection_upgrade;
         }
       }
-    ln -s /etc/nginx/sites-{available,enabled}/my-app.com
-    service nginx reload
+    sudo ln -s /etc/nginx/sites-{available,enabled}/my-app.com
+    sudo service nginx reload
 
 Finally, set the app to autostart on machine boot. So that random things
 like rebooting for a kernel update doesn't leave the app high and dry
 until someone pokes you on Slack.
 
-    vim /etc/init.d/my-app-prod.conf
+    sudo vim /etc/init.d/my-app-prod.conf
       description "my-app-prod"
 
       ## Uncomment the following two lines to run the
@@ -381,3 +381,4 @@ Happy coding, and more importantly, happy deploying, 314!
 [edeliver0]: https://github.com/boldpoker/edeliver
 [pr0]: https://github.com/mysteriouspants/mysteriouspants.com/blob/master/_posts/2016-07-18-deploying-phoenix.md
 [doswap0]: https://www.digitalocean.com/community/tutorials/how-to-add-swap-space-on-ubuntu-16-04
+[gitlog0]: https://github.com/mysteriouspants/mysteriouspants.com/commits/master/_posts/2016-07-18-deploying-phoenix.md
