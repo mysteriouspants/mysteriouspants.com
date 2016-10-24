@@ -9,7 +9,7 @@ is always on, so I'll see it eventually.
 
 I also have a Twitter account, [@mysterytrousers][twitter], which I
 check from time to time. You're welcome to strike up a conversation
-there, althoug do be aware that sometimes I'll go a week or more without
+there, although do be aware that sometimes I'll go a week or more without
 checking the Twitter.
 
 By far the most reliable means of connecting, however, is to raise an
