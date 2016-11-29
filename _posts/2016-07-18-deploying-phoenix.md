@@ -31,8 +31,8 @@ The overall model of deployment is to commit and push code to your
 source repository. edeliver will then pull that to a build server (a
 server that resembles your production server - in OS and architecture,
 so you can build a compatible package). On this build server it uses
-exrm to compile a release (or upgrade, which can patch your running code
-- pretty dope), and downloads that to your computer. You then upload
+exrm to compile a release (or upgrade, which can patch your running
+code - pretty dope), and downloads that to your computer. You then upload
 this package to your production server(s).
 
 These exrm releases themselves are pretty cool. They are self-contained
@@ -340,10 +340,10 @@ file, that should look something like this:
         "
       }
 
-      # copies the prod.secret.exs file you keep sequestered on your build
+      # links the prod.secret.exs file you keep sequestered on your build
       # machine into the build directory.
       pre_erlang_get_and_update_deps() {
-        # copy it on the build host to the build directory when building
+        # link it on the build host to the build directory when building
         local _secret_config_file_on_build_host="/home/build/my-app_prod.secret.exs"
         if [ "$TARGET_MIX_ENV" = "prod" ]; then
           status "Linking '$_secret_config_file_on_build_host' to build config dir"
