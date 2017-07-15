@@ -26,7 +26,7 @@ permalink:         /blog/:year/:month/:title/
 
 paginate:          9999
 paginate_path:     /blog/page/:num/
-gems:            [ jekyll-paginate, jekyll-sitemap ]
+plugins:         [ jekyll-paginate, jekyll-sitemap ]
 
 exclude:         [ README.md, COPYING.md, Gemfile, Gemfile.lock, publish.sh ]
 timezone:          America/Los_Angeles
