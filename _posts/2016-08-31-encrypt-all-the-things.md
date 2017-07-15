@@ -105,10 +105,13 @@ ciphers I totally didn't just pull off some webpage.
       ssl_ciphers EECDH+CHACHA20:EECDH+AES128:RSA+AES128:EECDH+AES256:RSA+AES256:EECDH+3DES:RSA+3DES:!MD5;
 
 Finally, Let's Encrypt certificates are only good for 90 days, so it's
-best to renew them. They suggest twice a day, which is super easy to do
-via a simple cron task.
+best to renew them. It's simple enough to renew it using a cron job.
 
-    sudo vim /etc/cron.d/letencrypt
-      0 0,12 * * * * letsencrypt renew
+    sudo vim /etc/cron.daily/letencrypt
+      #!/bin/sh
+
+      letsencrypt renew
+      service nginx reload
+      # reload any other services that may need to take the new certificates
 
 And there you have it.

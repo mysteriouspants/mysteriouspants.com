@@ -79,12 +79,12 @@ This next step will install the actual tools. This can take a while, so
 I suggest separating each command by a comma, then running off to get
 something to eat. It can take a moment.
 
-    asdf install erlang 19.0
-    asdf global  erlang 19.0
-    asdf install elixir 1.3.1
-    asdf global  elixir 1.3.1
-    asdf install nodejs 6.3.1
-    addf global  nodejs 6.3.1
+    asdf install erlang 20.0
+    asdf global  erlang 20.0
+    asdf install elixir 1.4.5
+    asdf global  elixir 1.4.5
+    asdf install nodejs 8.1.4
+    addf global  nodejs 8.1.4
 
 **Note:** Erlang requires somewhere slightly north of 1GB of RAM to
 build successfully, or it dies somewhere in a WxWidgets library compile.
@@ -263,7 +263,7 @@ as a dependency.
          {:phoenix_live_reload, "~> 1.0.5", only: :dev},
          {:gettext, "~> 0.11"},
          {:cowboy, "~> 1.0.4"},
-         {:edeliver, "~> 1.2.10"}]
+         {:edeliver, "~> 1.4.3"}]
       end
 
 You'll notice that we've added edeliver to both applications and deps.
