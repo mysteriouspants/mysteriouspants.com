@@ -79,12 +79,12 @@ This next step will install the actual tools. This can take a while, so
 I suggest separating each command by a comma, then running off to get
 something to eat. It can take a moment.
 
-    asdf install erlang 20.0
-    asdf global  erlang 20.0
-    asdf install elixir 1.4.5
-    asdf global  elixir 1.4.5
-    asdf install nodejs 8.1.4
-    addf global  nodejs 8.1.4
+    asdf install erlang 20.1
+    asdf global  erlang 20.1
+    asdf install elixir 1.5.2
+    asdf global  elixir 1.5.2
+    asdf install nodejs 8.7.0
+    addf global  nodejs 8.7.0
 
 **Note:** Erlang requires somewhere slightly north of 1GB of RAM to
 build successfully, or it dies somewhere in a WxWidgets library compile.

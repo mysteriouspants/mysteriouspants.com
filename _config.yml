@@ -20,7 +20,7 @@ authors:
         twitter:   mysterytrousers
         github:    mysteriouspants
         avatar:    xpm.png
-        about:     Computer scientist, humorist, and something of a math geek.
+        about:     Write code, write lots of bad code, and learn from it.
 
 permalink:         /blog/:year/:month/:title/
 

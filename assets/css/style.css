@@ -194,7 +194,7 @@ em, i { font-style: italic; }
 
 code {
   display: inline-block;
-  font-family: Menlo, Monaco, "Andale Mono", "Lucida Console", "Courier New", monospace;
+  font-family: Monaco, Menlo, "Andale Mono", "Lucida Console", "Courier New", monospace;
   margin: -1px 0;
 }
 
@@ -297,7 +297,7 @@ hr {
 	background: #eee;
 }
 
-span.code { font-family:Menlo, Monaco, Courier; background-color:#EEE; font-size:14px; }
+span.code { font-family:Monaco, Menlo, Courier; background-color:#EEE; font-size:14px; }
 
 pre	{
 	font-family:Menlo, Monaco, Courier;
@@ -309,7 +309,7 @@ pre	{
 	overflow:auto;
 	border-radius: 3px;
 	/*background: #fff;*/
-	  font-family: 'Source Code Pro',Menlo,monospace;
+	  font-family: Monaco , Menlo, monospace;
 	  font-size: 13px;
 	  line-height: 1.5em;
 	  font-weight: 500;
@@ -457,7 +457,7 @@ Post List
 	margin: 80px 0 0 0;
 }
 
-#post-meta {
+#post-meta, #not-comments {
 	font-size: 13px;
 	font-weight: bold;
 	line-height: 1.4;
@@ -470,7 +470,7 @@ Post List
   border-bottom: 1px solid #eee;
 }
 
-#post-meta div span {
+#post-meta div span, #not-comments div span {
 	color: #aaa;
 	font-weight: 500;
 	display: block;
