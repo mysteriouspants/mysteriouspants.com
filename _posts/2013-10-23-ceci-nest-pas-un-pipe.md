@@ -24,16 +24,16 @@ This is easily accomplished using integration by parts, which seems to be my the
 
 $$\begin{array}{cl}
 \int\frac{1}{2}x\sin2x\,dx&=\frac{1}{2}\left[\frac{1}{2}x\cos2x-\int\frac{-1}{2}\cos2x\,dx\right]\\
-\begin{align}
+\begin{aligned}
 u&=x&dv&=\sin2x\,dx\\
 du&=dx&v&=\frac{-1}{2}\cos2x
-\end{align}
+\end{aligned}
 \end{array}$$
 
 The remainder of which is easily integrated and simplified.
 
-$$\begin{align}
+$$\begin{aligned}
 \frac{1}{2}\left[\frac{1}{2}x\cos2x-\int\frac{-1}{2}\cos2x\,dx\right]&=\frac{1}{2}\left[\frac{-1}{2}x\cos2x+\frac{1}{4}\sin2x\right]\\
-&=\frac{1}{8}\sin2x-\frac{1}{4}x\cos2x+C\end{align}$$
+&=\frac{1}{8}\sin2x-\frac{1}{4}x\cos2x+C\end{aligned}$$
 
 *This is a solution for §7.1 Exercise #21 from* Calculus: Early Transcendentals.

@@ -5,6 +5,9 @@ meta_description: "Mysterious Pants: it's an adventure, 314!"
 contactPage:       true
 
 markdown:          kramdown
+kramdown:
+    auto_ids:      true
+    math_engine:   katex
 highlighter:       rouge
 
 baseurl:
@@ -22,7 +25,7 @@ authors:
         avatar:    xpm.png
         about:     Write code, write lots of bad code, and learn from it.
 
-permalink:         /blog/:year/:month/:title/
+permalink:         /blog/:year/:title/
 
 paginate:          9999
 paginate_path:     /blog/page/:num/

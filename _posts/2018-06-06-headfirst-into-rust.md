@@ -228,7 +228,7 @@ I personally prefer it over more popular modern languages like Go, because Rust 
 
 In short, Rust values the things that I value, and for that I enjoy it.
 
-[glmth]: https://gitlab.com/mysteriouspants/throttle
+[glmth]: https://github.com/mysteriouspants/throttle
 [ytjho]: https://www.youtube.com/watch?v=KS14JIRZTBw
 [zkill]: https://www.zkillboard.com/
 [rstdu]: https://doc.rust-lang.org/std/time/struct.Duration.html
