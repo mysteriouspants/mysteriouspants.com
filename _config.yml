@@ -32,7 +32,7 @@ paginate_path:     /blog/page/:num/
 plugins:         [ jekyll-paginate, jekyll-sitemap ]
 
 exclude:         [ README.md, COPYING.md, Gemfile, Gemfile.lock, publish.sh ]
-timezone:          America/Los_Angeles
+timezone:          America/Phoenix
 encoding:          utf-8
 
 defaults:
