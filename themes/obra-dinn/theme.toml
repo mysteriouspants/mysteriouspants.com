@@ -1,0 +1,9 @@
+name = "Obra Dinn"
+description = "An elegantly minimalist theme inspired by the 1-bit colors of The Return of the Obra Dinn and the layout of the Kactus theme for Jekyll."
+license = "2cbsd"
+homepage = "https://github.com/mysteriouspants/mysteriouspants.com"
+min_version = "0.8.0"
+
+[author]
+name = "Christopher R. Miller"
+homepage = "https://www.mysteriouspants.com"

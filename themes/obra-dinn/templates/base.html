@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <!--
+    A city made of wood is built in a forest,
+    a city made of stone is built in the mountains,
+    but a city made of dreams is built in heaven.
+     - Jovian proverb
+   -->
+  <head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+    <title>{% block title %}{{ config.title }}{% endblock title %}</title>
+
+    <link rel="shortcut icon" href="{{ get_url(path="favicon.ico", trailing_slash=false) | safe }}"/>
+
+    {% if config.generate_rss %}
+      <link rel="alternate" type="application/rss+xml" title="RSS" href="{{ get_url(path="rss.xml", trailing_slash=false) | safe }}"/>
+    {% endif %}
+
+    <link rel="stylesheet" href="{{ get_url(path="site.css", trailing_slash=false) | safe }}"/>
+
+    {% block extra_head %}
+    {% endblock extra_head %}
+  </head>
+
+  <body>
+    
+    {% if page is defined %}
+      {% set context = page %}
+    {% endif %}
+    {% if section is defined %}
+      {% set context = section %}
+    {% endif %}
+    
+    {% if not context.extra.suppress_navigation | default(value=false) %}
+    <nav class="main-nav">
+      {% if context.path != "/" %}
+        <a href="/" title="To be clear, this takes you back to my site's home, not necessarily your home."><span class="arrow">←</span> Home</a>
+      {% endif %}
+      {% if config.generate_rss %}
+        <a class="cta" href="{{ get_url(path="rss.xml") | safe }}"/>RSS</a>
+      {% endif %}
+    </nav>
+    {% endif %}
+    
+    {% if not context.extra.suppress_header | default(value=false) %}
+      <header>
+        <div>
+          <h1>{{ context.title | default(value="Mysterious Pants") | safe }}</h1>
+          {% if context.description is defined %}
+            <h2>{{ context.description | safe }}</h2>
+          {% endif %}
+        </div>
+      </header>
+    {% endif %}
+
+    <section id="wrapper">
+      {% block content %}
+      {% endblock content %}
+    </section>
+
+    <footer>
+      <p class="small">
+        &copy; Copyright 2012 - {{ now() | date(format="%Y") }} by Christopher R. Miller. The content and opinions on this site are those of Chris Miller, and are in no way shape or form representative of any past or current employer. Any who misconstrue this content as such will receive a stern tongue lashing.
+      </p>
+      <p class="small" title="Il semble que la perfection soit atteinte non quand il n'y a plus rien à ajouter, mais quand il n'y a plus rien à retrancher.">
+        &ldquo;It seems that perfection is attained not when there is nothing more to add, but when there is nothing more to remove.&rdquo; Antoine de Saint Exupéry. <i>Terre des Hommes</i>, Ch. III L'Avion (pp. 60). 1939.
+      </p>
+      <p class="small">
+        &ldquo;If in other sciences we should arrive at certainty without doubt and truth without error, it behooves us to place the foundations of knowledge in mathematics.&rdquo; Roger Bacon. <i>Opus Majus</i>, Book 1, Chapter 4. 1267.
+      </p>
+    </footer>
+
+    {% if config.enable_mathjax %}
+      <script src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    {% endif %}
+  </body>
+</html>

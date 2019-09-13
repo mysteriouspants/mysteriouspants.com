@@ -1,0 +1,232 @@
+/* Reset */
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td,article,aside,canvas,details,embed,figure,figcaption,footer,header,hgroup,menu,nav,output,ruby,section,summary,time,mark,audio,video{border:0;font-size:100%;font:inherit;vertical-align:baseline;margin:0;padding:0}article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section{display:block}body{line-height:1}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:none}table{border-collapse:collapse;border-spacing:0}
+*, *:before, *:after { -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; }
+
+/* colour and font theme */
+$white: #e5ffff;
+$black: #333319;
+
+           /* Windows            (Most) Linux         peasants */
+$serif-font: 'Times New Roman', 'Nimbus Roman No9 L', serif;
+              /* OS X            Windows                                         peasants */
+$monospace-font: Monaco, Menlo, 'Andale Mono', 'Lucidia Console', 'Courier New', monospace;
+
+/* Base */
+html, body { height: 100%; }
+
+body {
+	font:16px/1 $serif-font;
+	color: $white;
+	-webkit-font-smoothing: antialiased;
+	text-rendering: optimizeLegibility;
+	background: $black;
+}
+
+/* keep the same 1-bit colors, but invert them on selection */
+::selection, ::-moz-selection {
+  color: $black;
+  background: $white;
+}
+
+i { font-style: italic; }
+
+a, a:visited, a:hover {
+  color: $white;
+}
+
+nav.main-nav {
+  padding: 20px 20px 0;
+  margin: 0 auto;
+  text-align: right;
+  z-index: 100;
+
+  a {
+    text-decoration: none;
+  }
+}
+
+header {
+  max-width: 600px;
+  margin: 0 auto;
+
+  > div {
+    border-bottom: 1px solid $white;
+    padding: 100px 40px 0px;
+    text-align: center;
+    position: relative;
+    display: block;
+
+    h1 {
+      font-size: 30px;
+      font-variant: small-caps;
+      letter-spacing: 2px;
+    }
+
+    h2 {
+      font-size: 20px;
+      margin-top: 10px;
+    }
+
+    > :last-child {
+      padding-bottom: 40px;
+    }
+  }
+}
+
+section#wrapper {
+	max-width: 750px;
+	margin: 0 auto;
+	padding: 60px 40px 40px 40px;
+
+  h1, h2, h3, h4, h5, p, ul, ol, pre, figure {
+    margin-bottom: 20px;
+  }
+
+  h1 {
+    font-size: 30px;
+    letter-spacing: -1px;
+    font-weight: bold;
+    line-height: 1.4em;
+  }
+
+  h2 {
+    font-style: italic;
+    font-size: 26px;
+    line-height: 1.3em;
+  }
+
+  h3 {
+    font-style: italic;
+    font-size: 24px;
+    line-height: 1.3em;
+  }
+
+  h4 {
+    font-style: italic;
+    font-size: 22px;
+    line-height: 1.3em;
+  }
+
+  h5 {
+    font-style: italic;
+    font-size: 20px;
+    line-height: 1.3em;
+  }
+
+  h6 {
+    font-style: normal;
+    font-size: 20px;
+    line-height: 1.3em;
+  }
+
+  p {
+    margin-bottom: 20px;
+    line-height: 1.3em;
+  }
+
+  > code, :not(pre) code {
+    display: inline-block;
+    font-family: $monospace-font;
+    margin: -1px 0;
+  }
+
+  pre {
+    font-size: 13px;
+    line-height: 1.5em;
+    font-family: $monospace-font;
+    white-space: pre-wrap;
+    padding: 0px 0px 0px 20px;
+    overflow: auto;
+    border-radius: 3px;
+  }
+
+  hr {
+    background: $white;
+    height: 1px;
+    border: none;
+    margin: 40px auto;
+  }
+
+  ul, ol {
+    margin-left: 25px;
+  }
+
+  figure {
+    display: block;
+
+    img {
+      width: 100%;
+      max-width: 100%;
+      border-radius: 3px;
+    }
+
+    figcaption {
+      text-align: center;
+    }
+  }
+
+  > :last-child {
+    margin-bottom: 0px;
+  }
+
+  ul#post-list {
+    margin-left: 0px;
+    margin-bottom: 0px;
+
+    h2 {
+      font-size: 17px;
+      max-width: 400px;
+      margin-top: 2px;
+    }
+
+    li {
+      list-style-type: none;
+      margin-bottom: 20px;
+    }
+
+    li:last-child {
+      margin-bottom: 0;
+      border-bottom: 1px solid $white;
+    }
+
+    li+li {
+      padding-top: 20px;
+      border-top: 1px solid $white;
+    }
+    
+    a {
+      display: block;
+      font-weight: bold;
+      font-size: 19px;
+      text-decoration: none;
+    }
+    
+    .dates {
+      float: right;
+      position: relative;
+      text-transform: lowercase;
+      font-variant: small-caps;
+      font-weight: normal;
+      top: 1px;
+      font-size: 17px;
+    }
+    
+    li.year { text-align: center; }
+    li.year h2 { max-width: 100%; }
+  }
+}
+
+footer {
+  max-width: 670px;
+  padding: 10px 0 0 0;
+  margin: 0 auto 100px auto;
+  display: block;
+  border-top: 1px solid $white;
+
+  .small {
+    font-size: 14px;
+    line-height: 1.5;
+    display: block;
+    margin-bottom: 20px;
+  }
+}
