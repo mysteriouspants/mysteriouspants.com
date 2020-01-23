@@ -12,7 +12,7 @@
       {% endif %}
       <li>
         <a href="{{ page.permalink | safe }}"><aside class="dates">{{ page.date | date(format="%b %d") }}</aside></a>
-        <a href="{{ page.permalink | safe }}">{{ page.title }}<h2>{{ page.description }}</h2></a>
+        <a href="{{ page.permalink | safe }}">{{ page.title }}</a>
       </li>
     {% endfor %}
   </ul>

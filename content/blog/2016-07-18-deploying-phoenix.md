@@ -41,7 +41,7 @@ server. edeliver, however, supports a plurality of production servers.
 Cleverly, it uses SSH, so you can use keys to make things happen without
 a single password getting in the way.
 
-# Setting up a Build Server
+## Setting up a Build Server
 
 SSH to the server as `root` or any `sudo`-capable user.
 
@@ -118,7 +118,7 @@ I'll leave the configuration of your PostgreSQL server to you - there
 are plenty of tutorials and how-to's for it. Suffice it to say, you
 should substitute real values where I have left placeholders.
 
-# Setting up a Production Server
+## Setting up a Production Server
 
 Some of these steps will be identical to the steps performed on the
 build server. If these servers are the same, you can safely skip the
@@ -219,7 +219,7 @@ until someone pokes you on Slack.
 
       post-stop exec /bin/sh /home/my-app/my_app/bin/my_app stop
 
-# Configuring your Phoenix Project
+## Configuring your Phoenix Project
 
 There isn't a whole lot to do here, but some of these steps are
 important and missing one can lead to about a day of very confused
@@ -347,7 +347,7 @@ file, that should look something like this:
         fi
       }
 
-# Building and Deploying a Release
+## Building and Deploying a Release
 
 All this work, and it boils down to some very simple commands!
 

@@ -7,7 +7,7 @@ This is a development journal of my first Rust crate, [Throttle][glmth], which I
 
 *Most of the code listings are reconstructions and not completely accurate to what I eventually hammered out which compiled.*
 
-# The Throttle
+## The Throttle
 
 I decided to build a TPS throttle because I want to build some tooling around Squizz' [zKillboard][zkill] for EVE Online. First of my concerns is that I don't get blocked for spamming his website too much - and to slow down a program I reckon I want a throttle. I started by using the default crate template I got out of IntelliJ, and in the testing section wrote out how I wanted to use the throttle. I got something like the following:
 
@@ -55,7 +55,7 @@ I write Java in my day job (trying to transition to Kotlin, but for present purp
 
 Well you say dependency and so I try to make a bean or at least a struct. That was my first problem.
 
-# Storing a Trait, or Don't Write Java in Rust
+## Storing a Trait, or Don't Write Java in Rust
 
 My first reflex was to create a trait for the thing which controls the variance of the `Throttle`.
 
@@ -95,7 +95,7 @@ This is better, maybe even good. It makes it harder to work with `Throttle`, how
 
 Next I decided to try to make it a functional interface.
 
-# Storing a Closure, or Template All The Things
+## Storing a Closure, or Template All The Things
 
 By making the `Throttle` take a delay calculator as a functional interface I hoped to ameilorate the need for making additional implementations like some deranged late nineties Java developer. I also hoped to elide the need for using those `Box`es and generics. This was not to be.
 
@@ -143,7 +143,7 @@ This makes the constructors of the struct very simple:
       };
     }
 
-# Documentation that also Tests
+## Documentation that also Tests
 
 Thus far Rust has been delightful. The language is terse, yet expressive, and the compiler, while unforgiving, is helpful with well-written error messages with suggestions to resolution. But perhaps the most impressive to me is how documentation is written for Rust. Beyond a good README file, which has been shown to be the single most important factor in the adoption of an open-source project, the documentation can either be an asset or a liability, depending on the quality and accuracy.
 
@@ -220,7 +220,7 @@ And to the user, the person viewing the webpage, it looks like any normal code l
 
 The combined effect is that I ended up putting more of my tests in the documentation, both as a test-driven measure, and to make sure my tests are really showing how the crate works from a consumer-driven perspective. If I change the API contract, the test should break right in the documentation, so the documentation should not be able to drift away from how the crate actually works, so long as I'm still running the tests.
 
-# Final thoughts
+## Final thoughts
 
 Rust is a language I've had my eye on for a very long time now. It promises to be close to the metal, fast, and expressive, focusing on letting the programmer build abstractions that don't cost in performance as much as possible. It's portable, and it has a great build system with an easy way of taking on new dependencies.
 
