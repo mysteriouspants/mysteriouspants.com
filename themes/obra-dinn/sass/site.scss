@@ -73,10 +73,14 @@ header {
   }
 }
 
-section#wrapper {
+@mixin wrapper-common() {
 	max-width: 1024px;
 	margin: 0 auto;
 	padding: 60px 40px 40px 40px;
+}
+
+section#wrapper {
+  @include wrapper-common();
 
   h1, h2, h3, h4, h5, p, ul, ol, pre, figure {
     margin-bottom: 20px;
@@ -155,7 +159,7 @@ section#wrapper {
     line-height: 1.5em;
     font-family: $monospace-font;
     white-space: pre-wrap;
-    padding: 0px 0px 0px 20px;
+    padding: 0px 0px 0px 30px;
     overflow: auto;
     border-radius: 3px;
   }
@@ -168,7 +172,7 @@ section#wrapper {
   }
 
   ul, ol {
-    margin-left: 25px;
+    margin-left: 30px;
   }
 
   figure {
@@ -187,52 +191,57 @@ section#wrapper {
 
   > :last-child {
     margin-bottom: 0px;
-  }
-
-  ul#post-list {
-    margin-left: 0px;
-    margin-bottom: 0px;
-    border-bottom: 1px solid $white;
-
-    h2 {
-      font-size: 17px;
-      max-width: 400px;
-      margin-top: 2px;
-    }
-
-    li {
-      list-style-type: none;
-      line-height: 1.3em;
-      margin-bottom: 20px;
-    }
-
-    li+li {
-      padding-top: 20px;
-      border-top: 1px solid $white;
-    }
-    
-    a {
-      display: block;
-      font-weight: bold;
-      font-size: 19px;
-      text-decoration: none;
-    }
-    
-    .dates {
-      float: right;
-      position: relative;
-      text-transform: uppercase;
-      font-weight: normal;
-      top: 1px;
-      font-size: 17px;
-    }
-    
-    li.year { text-align: center; }
-    li.year h2 { max-width: 100%; }
-  }
+  }  
 }
 
-footer {
+section#index-wrapper {
+  @include wrapper-common();
+}
+
+ul#post-list {
+  margin-left: 0px;
+  margin-bottom: 0px;
+  border-bottom: 1px solid $white;
+
+  h2 {
+    font-size: 20pt;
+    font-weight: bold;
+    max-width: 400px;
+    margin-top: 2px;
+  }
+
+  li {
+    list-style-type: none;
+    line-height: 1.3em;
+    margin-bottom: 20px;
+  }
+
+  li+li {
+    padding-top: 20px;
+    border-top: 1px solid $white;
+  }
+  
+  a {
+    display: block;
+    font-weight: bold;
+    font-size: 18pt;
+    text-decoration: none;
+  }
+  
+  .dates {
+    float: right;
+    position: relative;
+    text-transform: uppercase;
+    font-weight: normal;
+    top: 1px;
+    font-size: 17px;
+  }
+  
+  li.year { text-align: center; }
+  li.year h2 { max-width: 100%; }
+}
+
+ footer {
   max-width: 944px;
   padding: 10px 0 0 0;
   margin: 0 auto 100px auto;
