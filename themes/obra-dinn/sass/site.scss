@@ -5,17 +5,40 @@ html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abb
 /* colour and font theme */
 $white: #e5ffff;
 $black: #333319;
+$blockindent: 50px;
 
-           /* Windows            (Most) Linux         peasants */
-$serif-font: 'Times New Roman', 'Nimbus Roman No9 L', serif;
-              /* OS X            Windows                                         peasants */
-$monospace-font: Monaco, Menlo, 'Andale Mono', 'Lucidia Console', 'Courier New', monospace;
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("/JetBrainsMono-Regular.woff2")
+}
+
+@font-face {
+  font-family: "JetBrains Mono";
+  font-style: italic;
+  src: url("/JetBrainsMono-Italic.woff2")
+}
+
+@font-face {
+  font-family: "JetBrains Mono";
+  font-weight: bold;
+  src: url("/JetBrainsMono-Bold.woff2");
+}
+
+@font-face {
+  font-family: "JetBrains Mono";
+  font-weight: bold;
+  font-style: italic;
+  src: url("/JetBrainsMono-Bold-Italic.woff2")
+}
+
+$serif-font: "JetBrains Mono", monospace;
+$monospace-font: "JetBrains Mono", monospace;
 
 /* Base */
 html, body { height: 100%; }
 
 body {
-	font:18pt/1 $serif-font;
+	font:14pt/1 $serif-font;
 	color: $white;
 	-webkit-font-smoothing: antialiased;
 	text-rendering: optimizeLegibility;
@@ -87,10 +110,10 @@ section#wrapper {
   }
 
   h1 {
-    font-size: 32pt;
+    font-size: 14pt;
     letter-spacing: -1px;
     font-weight: bold;
-    line-height: 1.4em;
+    line-height: 1.3em;
     &::before {
       content: "# ";
     }
@@ -98,7 +121,7 @@ section#wrapper {
 
   h2 {
     font-weight: bold;
-    font-size: 24pt;
+    font-size: 14pt;
     line-height: 1.3em;
     &::before {
       content: "## ";
@@ -107,7 +130,7 @@ section#wrapper {
 
   h3 {
     font-weight: bold;
-    font-size: 23pt;
+    font-size: 14pt;
     line-height: 1.3em;
     &::before {
       content: "### ";
@@ -116,7 +139,7 @@ section#wrapper {
 
   h4 {
     font-weight: bold;
-    font-size: 22pt;
+    font-size: 14pt;
     line-height: 1.3em;
     &::before {
       content: "#### ";
@@ -125,7 +148,7 @@ section#wrapper {
 
   h5 {
     font-weight: bold;
-    font-size: 21pt;
+    font-size: 14pt;
     line-height: 1.3em;
     &::before {
       content: "##### ";
@@ -134,7 +157,7 @@ section#wrapper {
 
   h6 {
     font-weight: italic;
-    font-size: 20pt;
+    font-size: 14pt;
     line-height: 1.3em;
     &::before {
       content: "###### ";
@@ -144,8 +167,6 @@ section#wrapper {
   p {
     margin-bottom: 20px;
     line-height: 1.3em;
-    text-align: justify;
-    text-justify: auto;
   }
 
   > code, :not(pre) code {
@@ -155,11 +176,11 @@ section#wrapper {
   }
 
   pre {
-    font-size: 16pt;
-    line-height: 1.5em;
+    font-size: 14pt;
+    line-height: 1.3em;
     font-family: $monospace-font;
     white-space: pre-wrap;
-    padding: 0px 0px 0px 30px;
+    padding: 0px 0px 0px $blockindent;
     overflow: auto;
     border-radius: 3px;
   }
@@ -171,8 +192,12 @@ section#wrapper {
     margin: 40px auto;
   }
 
+  em {
+    font-style: italic;
+  }
+
   ul, ol {
-    margin-left: 30px;
+    margin-left: $blockindent;
   }
 
   figure {
