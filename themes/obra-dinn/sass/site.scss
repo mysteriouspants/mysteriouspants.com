@@ -62,11 +62,11 @@ $monospace-font: "JetBrains Mono", monospace;
 html, body { height: 100%; }
 
 body {
-	font:14pt/1 $serif-font;
-	color: $white;
-	-webkit-font-smoothing: antialiased;
-	text-rendering: optimizeLegibility;
-	background: $black;
+  font:14pt/1 $serif-font;
+  color: $white;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  background: $black;
 }
 
 /* keep the same 1-bit colors, but invert them on selection */
@@ -128,7 +128,9 @@ header {
 
 section#wrapper {
   @include wrapper-common();
-  
+
+  text-align: justify;
+  text-justify: inter-word;
   hyphens: auto;
 
   h1, h2, h3, h4, h5, p, ul, ol, pre, figure {
@@ -243,7 +245,7 @@ section#wrapper {
 
   > :last-child {
     margin-bottom: 0px;
-  }  
+  }
 }
 
 section#index-wrapper {
@@ -272,13 +274,13 @@ ul#post-list {
     padding-top: 20px;
     border-top: 1px solid $white;
   }
-  
+
   a {
     display: block;
     font-size: 14pt;
     text-decoration: none;
   }
-  
+
   .dates {
     float: right;
     position: relative;
@@ -287,7 +289,7 @@ ul#post-list {
     top: 1px;
     font-size: 14pt;
   }
-  
+
   li.year { text-align: center; }
   li.year h2 { max-width: 100%; }
 }
