@@ -1,11 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
-  <!--
-    A city made of wood is built in a forest,
-    a city made of stone is built in the mountains,
-    but a city made of dreams is built in heaven.
-     - Jovian proverb
-   -->
+  {% block pre_head %}
+  {% endblock %}
+
   <head>
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
@@ -26,25 +23,33 @@
   </head>
 
   <body>
-    
     {% if page is defined %}
       {% set context = page %}
     {% endif %}
     {% if section is defined %}
       {% set context = section %}
     {% endif %}
-    
+
     {% if not context.extra.suppress_navigation | default(value=false) %}
     <nav class="main-nav">
       {% if context.path != "/" %}
-        <a href="/" title="To be clear, this takes you back to my site's home, not necessarily your home."><span class="arrow">←</span> Home</a>
+        <nav-item>
+          <a href="/" title="To be clear, this takes you back to the site's home, not necessarily your home."><span class="arrow">←</span> Home</a>
+        </nav-item>
       {% endif %}
+      {% for link in config.extra.nav_links %}
+        <nav-item>
+          <a href="{{ link.href | safe }}">{{ link.name | safe }}</a>
+        </nav-item>
+      {% endfor %}
       {% if config.generate_rss %}
-        <a class="cta" href="{{ get_url(path="rss.xml") | safe }}"/>RSS</a>
+        <nav-item>
+          <a class="cta" href="{{ get_url(path="rss.xml") | safe }}"/>RSS</a>
+        </nav-item>
       {% endif %}
     </nav>
     {% endif %}
-    
+
     {% if not context.extra.suppress_header | default(value=false) %}
       <header>
         <div>
@@ -60,15 +65,9 @@
     {% endblock content %}
 
     <footer>
-      <p class="small">
-        &copy; Copyright 2012 - {{ now() | date(format="%Y") }} by Christopher R. Miller. The content and opinions on this site are those of Chris Miller, and are in no way shape or form representative of any past or current employer. Any who misconstrue this content as such will receive a stern tongue lashing.
-      </p>
-      <p class="small" title="Il semble que la perfection soit atteinte non quand il n'y a plus rien à ajouter, mais quand il n'y a plus rien à retrancher.">
-        &ldquo;It seems that perfection is attained not when there is nothing more to add, but when there is nothing more to remove.&rdquo; Antoine de Saint Exupéry. <i>Terre des Hommes</i>, Ch. III L'Avion (pp. 60). 1939.
-      </p>
-      <p class="small">
-        &ldquo;If in other sciences we should arrive at certainty without doubt and truth without error, it behooves us to place the foundations of knowledge in mathematics.&rdquo; Roger Bacon. <i>Opus Majus</i>, Book 1, Chapter 4. 1267.
-      </p>
+      {% block footer %}
+        &copy; {{ now() | date(format="%Y") }} by {{ config.extra.author }}
+      {% endblock %}
     </footer>
 
     {% if config.enable_mathjax %}

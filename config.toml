@@ -12,7 +12,15 @@ highlight_code = false
 # Whether to build a search index to be used later on by a JavaScript library
 build_search_index = true
 
+generate_rss = true
+
 theme = "obra-dinn"
 
 [extra]
 # Put all your custom variables here
+author = "Christopher R. Miller"
+
+[[extra.nav_links]]
+name = "Github"
+href = "https://github.com/mysteriouspants"
+
