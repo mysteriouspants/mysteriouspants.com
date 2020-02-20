@@ -1,0 +1,3 @@
+[submodule "themes/obra-dinn"]
+	path = themes/obra-dinn
+	url = git@github.com:mysteriouspants/zola-theme-obra-dinn.git
