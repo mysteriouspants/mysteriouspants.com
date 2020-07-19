@@ -167,7 +167,8 @@ Configuration parsing is super unwrappy. Look at this horrible code I wrote in
 // initialization is sorta expected on bad config, right?
 fn parse_handlers(raw_toml: String) -> Vec<Box<dyn MysteriousMessageHandler>> {
     let toml = raw_toml.parse::<Value>().unwrap();
-    let handlers = toml.as_table().unwrap().get("handlers").unwrap().as_array().unwrap();
+    let handlers = toml.as_table().unwrap().get("handlers").unwrap().as_array()
+        .unwrap();
     ...
 ```
 
