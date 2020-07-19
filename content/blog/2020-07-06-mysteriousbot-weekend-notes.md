@@ -96,6 +96,7 @@ was even supported. It created some bizarre code that looks like this, from
 [`AckMessageHandler`][amh]'s `should_handle/3` method.
 
 ```rust
+// don't copy-paste this, i learned a better way described below!
 if let Ok(current_user) = ctx.http.get_current_user() {
     let user_id = current_user.id;
     
@@ -115,6 +116,34 @@ I spend perhaps a few hours on that. I'd like to submit a PR which can add a
 simple helper to `Message` itself, just a simple one that adds a `mentions_me`
 method. I know it would have saved me some time, but I'm fully willing to admit
 that I may be on the only person stuck on that.
+
+**Update 2020-07-18**
+
+This was a relatively easy itch to scratch, so I made [a PR][serenpr911] to add
+a simple `mentions_me` function to `Message`. A Serenity developer helpfully
+pointed out that the means I had been using is *not* cached! To use the cache
+collapses this down to a very neat one-liner (if and only if you have the cache
+feature enabled).
+
+```rust
+msg.mentions_user_id(ctx.cache.read().user.id)
+```
+
+Unpacking this a little, `ctx.cache.read()` is because that `cache` is really a
+[`CacheRwLock`][CacheRwLock], which itself is a wrapper around an `Arc<RwLock<Cache>>`, which
+enables it to be passed around multiple threads.
+
+Calling `read/1` on it is just saying "I only want to read from the cache." This
+is rather nifty because it returns a wrapper around the cache, and doesn't lock
+the cache for any other readers. Because of RAII semantics, when that wrapper
+goes out of scope it gets dropped and that read lock goes away, so someone else
+may be able to write to the cache. This is a neat example of how Rust's
+ownership model has shepherded us into a safe-by-default idiom when dealing with 
+concurrency!
+
+As it so happens, this cache has a pre-cached `CurrentUser`, from which we fetch
+the `id` we wanted in the first place. No need for another HTTP call and
+possible error to handle from that!
 
 ### Getting the current channel name
 
@@ -268,3 +297,5 @@ Happy coding!
 [nscoder]: https://developer.apple.com/documentation/foundation/nscoder
 [readme]: https://github.com/mysteriouspants/mysteriousbot/blob/caba97f1d219076c28e45f61648e4675e3166a3b/README.md
 [mysteriousbot]: https://github.com/mysteriouspants/mysteriousbot
+[serenpr911]: https://github.com/serenity-rs/serenity/pull/911
+[CacheRwLock]: https://docs.rs/serenity/0.8.6/serenity/cache/struct.CacheRwLock.html
