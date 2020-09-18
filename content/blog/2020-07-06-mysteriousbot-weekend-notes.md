@@ -274,7 +274,7 @@ Overall I enjoyed the time spend on this little project. I created something
 that is useful, and I hope maintainable. Though there were a few sandtraps
 along the way, the proof really was in the deployment. Rust created a system
 dependency-free binary that idles at about a megabyte and a half of RAM use. For
-someone as const-sensitive as I, that's a win!
+someone as cost-sensitive as I, that's a win!
 
 If you've got an itch to scratch in Discord that could be served by a Bot, I'd
 suggest giving Rust and Serenity a spin. Please make use of my [notes and
