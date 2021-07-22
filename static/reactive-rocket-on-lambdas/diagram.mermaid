@@ -1,0 +1,9 @@
+graph LR
+Browser[Browser]
+S3[AWS S3 Static Site]
+APIGWV2[AWS API Gateway V2]
+Lambda[AWS Lambda]
+Browser --> |www.my-domain.com| S3
+Browser --> |api.my-domain.com| APIGWV2
+APIGWV2 --> Lambda
+
