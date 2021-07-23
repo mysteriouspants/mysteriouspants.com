@@ -1,0 +1,19 @@
+---
+---
+
+@import "minima/skins/{{ site.minima.skin | default: 'classic' }}";
+@import "minima/initialize";
+
+figure {
+    img { 
+        margin: auto;
+    }
+    figcaption {
+        text-align: center;
+    }
+}
+
+img.mermaid {
+    display: flex;
+    margin: auto;
+}

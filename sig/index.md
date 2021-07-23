@@ -1,10 +1,7 @@
-+++
-template = "page.html"
-date = 2016-03-02
-[extra]
-suppress_header = true
-suppress_navigation = true
-+++
+---
+layout: page
+date: 2016-03-02
+---
 
 *8 July 2011, 11:26:46 AM Eastern Daylight Time*
 

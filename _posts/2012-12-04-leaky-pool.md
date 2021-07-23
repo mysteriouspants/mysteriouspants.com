@@ -1,8 +1,11 @@
-+++
-title = "The Case of the Leaky Pool"
-date = 2012-12-04
-summary = "Detective Trousers sifts through some of the lower-levels of the system to bag one of the most innocuous bugs ever seen."
-+++
+---
+title: "The Case of the Leaky Pool"
+date: 2012-12-04
+description: "Detective Trousers sifts through some of the lower-levels of the system to bag one of the most innocuous bugs ever seen."
+tags:
+  - ruby
+  - jruby
+---
 
 It always has to happen right before your system administrator leaves on vacation. The game is set, the stakes are high, and nobody is willing to fold. It was at a time like this that the Java Virtual Machine (JVM) on our second production server was discovered to be leaking memory like a gangster leaking blood in the Valentine's Day Massacre. Unlike the mafiosos in Chicago, we couldn't figure out why our JVM was bleeding.
 
@@ -15,7 +18,7 @@ Like any good beat, we got two production servers with a fat load balancer in fr
 And being smart paid off. On Monday we looked at our Munin graphs to check in on the situation. The admin likes to do that before he checks out. Whether for peace of mind, or through grizzled experience doesn't matter as much. Our monitoring reported all systems normal - except `app02.prod`.
 
 <figure>
-  <img src="/leaky-pool/app02_prod_proxy_memory_use_day4.png" alt="graphs!">
+  <img src="/assets/leaky-pool/app02_prod_proxy_memory_use_day4.png" alt="graphs!">
   <figcaption>app02.prod.proxy memory-use-day4</figcaption>
 </figure>
 
@@ -40,7 +43,7 @@ This put my investigation in a pickle. The memory leak was only manifesting on `
 He installed Munin on a little-known dame sitting in the other aisle, `app01.stage`, where we try out our new kicks before promoting them to a full prod showing.
 
 <figure>
-  <img src="/leaky-pool/app01_stage__proxy_leak_day2.png" alt="graphs!">
+  <img src="/assets/leaky-pool/app01_stage__proxy_leak_day2.png" alt="graphs!">
   <figcaption>app01.stage.proxy leak-day2</figcaption>
 </figure>
 
@@ -93,7 +96,7 @@ So I cheated. I ran `wget` on `app01.stage` to put VisualVM on the staging serve
 I had a way in. And it didn't look bad. These mafia types are much nicer than the drug runners from LA.
 
 <figure>
-  <img src="/leaky-pool/app01_stage__proxy_visualvm_threadleak_day2.png" alt="magic applications!">
+  <img src="/assets/leaky-pool/app01_stage__proxy_visualvm_threadleak_day2.png" alt="magic applications!">
   <figcaption>app01.stage.proxy visualvm-threadleak-day2</figcaption>
 </figure>
 

@@ -1,7 +1,16 @@
-+++
-title = "Developing a Discord Bot Over a (Long) Weekend"
-date = 2020-07-06
-+++
+---
+title:  "Developing a Discord Bot Over a (Long) Weekend"
+date:   2020-07-06
+description: >
+  An after-development summary from my experience using Rust and the
+  Serenity crate to build a Discord bot over a weekend.
+categories:
+  - rust
+  - discord
+redirect_from:
+    # alias from zola site
+  - /blog/mysteriousbot-weekend-notes/
+---
 
 Over the extended 4 July weekend I spent some time building a chatbot for
 Discord. I, of course, picked Rust, and wanted to record some thoughts and notes

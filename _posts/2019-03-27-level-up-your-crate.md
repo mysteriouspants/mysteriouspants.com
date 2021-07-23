@@ -1,9 +1,17 @@
-+++
-title = "Level up your Crate"
-date = 2019-03-27
-# alias for https://rust.azdevs.org/2019-03-27/
-aliases = ["blog/2019/level-up-your-crate/"]
-+++
+---
+title: "Level up your Crate"
+date: 2019-03-27
+description: >
+  A quick list of things to look at when publishing a new crate to give
+  it the widest impact possible.
+tags:
+  - rust
+redirect_from:
+    # alias for https://rust.azdevs.org/2019-03-27/
+  - /blog/2019/level-up-your-crate/
+    # alias from zola site
+  - /blog/level-up-your-crate/
+---
 
 This is adapted from a talk given on 27 March 2019 at [Desert Rust](https://www.meetup.com/Desert-Rustaceans/), a meetup group of Rust enthusiasts in Mesa, Arizona. If you live in the area or are just visiting during a meetup, please stop by - we'd love to see you there!
 

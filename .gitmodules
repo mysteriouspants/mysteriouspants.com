@@ -1,6 +1,0 @@
-[submodule "themes/obra-dinn"]
-	path = themes/obra-dinn
-	url = git@github.com:mysteriouspants/zola-theme-obra-dinn.git
-[submodule "themes/leaf"]
-	path = themes/leaf
-	url = git@github.com:mysteriouspants/zola-theme-leaf.git

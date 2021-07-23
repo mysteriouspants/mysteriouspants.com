@@ -1,14 +1,22 @@
-+++
-title = "Reactive Rocket on Lambdas"
-date = 2021-07-21
-+++
+---
+title:  "Reactive Rocket on Lambdas"
+date:   2021-07-21
+description: >
+  A walkthrough guide explaining how to deploy a Rust program onto an
+  AWS Lambda using CDK, access it from the public Internet using AWS API
+  Gateway, and secure it using CORS.
+categories: 
+  - rust
+  - aws
+  - aws lambda
+  - aws cdk
+  - rocket
+  - reactjs
+  - typescript
+---
 
 This walkthrough shows how to use Rust on an AWS Lambda handling requests from AWS API Gateway V2, ostensibly to serve as the backend for a client application served through AWS S3 or AWS CloudFront. The AWS API Gateway V2 and static site in AWS S3 are connected to real domain names managed by AWS Route53. The overall architecture provides an inexpensive, highly-scalable infrastructure for web services, costing a few cents a month for the seldom used to hundreds for the heavily trafficked. This is all constructed and deployed with the AWS Cloud Development Toolkit, or CDK.
 
-<figure>
-  <img src="/reactive-rocket-on-lambdas/diagram.png" alt="diagram!">
-  <figcaption>the general idea</figcaption>
-  <div style="display:none">
 ```mermaid
 graph LR
 Browser[Browser]
@@ -19,8 +27,6 @@ Browser --> |www.my-domain.com| S3
 Browser --> |api.my-domain.com| APIGWV2
 APIGWV2 --> Lambda
 ```
-  </div>
-</figure>
 
 Cloud resources represent an enormous opportunity for hackers, as "free" data storage, compute, and simply mining your customer's data. Rust's strong consistency and security guarantees make it a challenging target for criminals to exploit as a vector into your cloud. In addition to security, Rust presents a particularly strong presence as the language of implementation for a Lambda, where execution speed translates directly into cost savings as billing is calculated by the millisecond, prorated to the nearest ten.
 

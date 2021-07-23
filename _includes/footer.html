@@ -1,0 +1,53 @@
+<footer class="site-footer h-card">
+  <data class="u-url" href="{{ " /" | relative_url }}"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="{{ 'feed.xml' | relative_url }}">
+            <svg class="svg-icon orange">
+              <use xlink:href="{{ 'assets/minima-social-icons.svg#rss' | relative_url }}"></use>
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+        {%- if site.author.name %}
+        <p>
+          &copy; 2019 - {{ site.time | date: '%Y' }} {{ site.author.name | escape }}.
+        </p>
+        <p>
+          The content and opinions on this site are those of the author,
+          and are in no way, shape, or form representative of any past
+          or current employer. Any who misconstrue this content as such
+          will receive a stern tongue lashing.
+        </p>
+        {%- endif %}
+      </div>
+      <div class="footer-col">
+        <p class="small" title="
+          Il semble que la perfection soit atteinte non quand il n'y a
+          plus rien à ajouter, mais quand il n'y a plus rien à
+          retrancher.
+        ">
+          &ldquo;It seems that perfection is attained not when there is
+          nothing more to add, but when there is nothing more to
+          remove.&rdquo; Antoine de Saint Exupéry. <i>Terre des
+            Hommes</i>, Ch. III L'Avion (pp. 60). 1939.
+        </p>
+        <p class="small">
+          &ldquo;If in other sciences we should arrive at certainty
+          without doubt and truth without error, it behooves us to place
+          the foundations of knowledge in mathematics.&rdquo; Roger
+          Bacon. <i>Opus Majus</i>, Book 1, Chapter 4. 1267.
+        </p>
+      </div>
+    </div>
+
+    <div class="social-links">
+      {%- include social.html -%}
+    </div>
+
+  </div>
+
+</footer>

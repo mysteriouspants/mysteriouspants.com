@@ -1,0 +1,50 @@
+title: Mysterious Pants
+author:
+  name: Christopher R. Miller
+description: That's trousers to my European friends!
+baseurl: "" # the subpath of your site, e.g. /blog
+url: "https://www.mysteriouspants.com"
+permalink: /:year/:month/:day/:title:output_ext
+
+# Build settings
+plugins:
+  - jekyll-remote-theme
+  - jekyll-feed
+  - jekyll-spaceship
+  - jekyll-redirect-from
+  - jekyll-seo-tag
+
+# Theme settings
+remote_theme: jekyll/minima
+minima:
+  skin: dark
+  social_links:
+    github: mysteriouspants
+
+defaults:
+  # _posts
+  - scope:
+      path: ""
+      type: posts
+    values:
+      layout: post
+
+jekyll-spaceship:
+  processors:
+    - mathjax-processor
+    - mermaid-processor
+    - polyfill-processor
+  mermaid-processor:
+    mode: default
+    css:
+      class: mermaid
+    syntax:
+      code: 'mermaid'
+      custom: ['@startmermaid', '@endmermaid']
+    config:
+      theme: dark
+    src: https://mermaid.ink/svg/
+
+exclude:
+  - README.md
+  - COPYING.md
