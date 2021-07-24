@@ -4,7 +4,7 @@ date:   2020-07-06
 description: >
   An after-development summary from my experience using Rust and the
   Serenity crate to build a Discord bot over a weekend.
-categories:
+tags:
   - rust
   - discord
 redirect_from:
