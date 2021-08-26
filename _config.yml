@@ -4,7 +4,7 @@ author:
 description: That's trousers to my European friends!
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "https://www.mysteriouspants.com"
-permalink: /:year/:month/:day/:title:output_ext
+permalink: /:categories/:year/:month/:day/:title:output_ext
 
 # Build settings
 plugins:

@@ -1,11 +1,11 @@
 ---
-title:  "Reactive Rocket on Lambdas"
+title:  "Reactive Rocket on Lambda"
 date:   2021-07-21
 description: >
   A walkthrough guide explaining how to deploy a Rust program onto an
   AWS Lambda using CDK, access it from the public Internet using AWS API
   Gateway, and secure it using CORS.
-categories: 
+tags:
   - rust
   - aws
   - aws lambda
@@ -75,7 +75,7 @@ Your AWS CLI is now configured. On to CDK.
 ## Install CDK
 
 ```
-xpm@mysteriousnotebook ~> npm i -g typescript aws-cdk@1.114.0
+xpm@mysteriousnotebook ~> npm i -g typescript aws-cdk@1.116.0
 xpm@mysteriousnotebook ~> asdf reshim # if using asdf
 xpm@mysteriousnotebook ~> cdk --version
 ```
@@ -161,7 +161,7 @@ Next we'll install some dependencies, which are the pieces of the CDK library de
 
 ```
 xpm@mysteriousnotebook ~/C/p/cdk> npm i \
-  @aws-cdk/aws-{lambda,api-gatewayv2,api-gatewayv2-integrations,aws-logs}@1.114.0
+  @aws-cdk/aws-{lambda,api-gatewayv2,api-gatewayv2-integrations,aws-logs}@1.116.0
 xpm@mysteriousnotebook ~/C/p/cdk> popd
 ```
 
@@ -290,7 +290,7 @@ Step by step, we specify our Rust version. CDK will build the binary for the lam
 
 If you do need to back out of using MUSL for some reason, such as a dependency on OpenSSL you can't get out of, you can configure an Amazon Linux 2 Docker image (`amazonlinux:latest`) with the Rust toolchain and use that as a builder instead - it'll give you the same userspace as the microvm variant we select, so it'll work just fine.
 
-Further down we create our API Gatway, backed by the Lambda. Specifying the V2 model version is important for the `lambda_web` crate, which doesn't work with the other V1 type.
+Further down we create our API Gateway, backed by the Lambda. Specifying the V2 model version is important for the `lambda_web` crate, which doesn't work with the other V1 type.
 
 ```typescript
 import * as cdk from '@aws-cdk/core';
@@ -322,7 +322,6 @@ export class CdkStack extends cdk.Stack {
           image: cdk.DockerImage.fromRegistry(`rust:${rustVersion}-slim`),
         }
       }),
-      functionName: domainName.split('.')[0] + '-api',
       handler: 'main',
       runtime: lambda.Runtime.PROVIDED_AL2,
       logRetention: awslogs.RetentionDays.ONE_MONTH,
@@ -453,7 +452,7 @@ We can have CDK build and deploy the static website much the same way we had it 
 
 ```
 xpm@mysteriousnotebook > pushd cdk
-xpm@mysteriousnotebook > npm i @aws-cdk/aws-s3{,-deployment}@1.114.0
+xpm@mysteriousnotebook > npm i @aws-cdk/aws-s3{,-deployment}@1.116.0
 ```
 
 Now back to our infrastructure stack, let's create a new open S3 bucket and a deployment task, that just like the Lambda earlier will take a Docker image and run a command in it to generate the website.
@@ -545,14 +544,56 @@ xpm@mysteriousnotebook ~/C/p/cdk > npm i \
 
 ### Lookup the Hosted Zone, Certificate Management
 
-First up, back in `cdk/lib/cdk.ts` let's get a reference to the hosted zone created earlier and set up an SSL Certificate for it. Public SSL Certificates are free from AWS, and at time of writing Route53 is $0.50 for each hosted zone, so this all keeps in the spirit of building cool web services on a shoestring budget.
+Let's create a new CDK Stack to hold our DNS constructs in `cdk/lib/dns.ts`.
+
+```typescript
+import * as acm from '@aws-cdk/aws-certificatemanager';
+import * as cdk from '@aws-cdk/core';
+import * as route53 from '@aws-cdk/aws-route53';
+
+export interface CustomStackProps {
+  domainName: string,
+}
+
+export class DnsStack extends cdk.Stack {
+  readonly zone: route53.IHostedZone;
+  readonly cert: acm.ICertificate;
+
+  constructor(
+    scope: cdk.Construct, id: string,
+    props: cdk.StackProps & CustomStackProps
+  ) {
+    super(scope, id, props);
+    const { domainName } = props;
+
+    this.zone = route53.HostedZone.fromLookup(
+      this, 'HostedZone', { domainName }
+    );
+    this.cert = new acm.Certificate(this, 'DomainCertificate', {
+      domainName,
+      validation: acm.CertificateValidation.fromDns(this.zone),
+      subjectAlternativeNames: [`*.${domainName}`],
+    });
+  }
+}
+```
+
+This stack grabs an existing hosted zone that you should create manually and exports it and an automatically generated certificate we can use in other stacks. I believe you should create the hosted zone manually because DNS is a very big foot-gun to leave up to `cdk destroy` which I guarantee you'll do at least once while experimenting. Public SSL Certificates are free from AWS, and at time of writing Route53 is $0.50 for each hosted zone, so this all keeps in the spirit of building cool web services on a shoestring budget.
+
+Now we should provide the hosted zone and certificate as properties in our main application stack.
 
 ```typescript
 import * as route53 from '@aws-cdk/aws-route53';
 import * as route53Targets from '@aws-cdk/aws-route53-targets';
 import * as acm from '@aws-cdk/aws-certificatemanager';
 
-export interface CustomStackProps { /* ... */ }
+export interface CustomStackProps {
+    zone: route53.IHostedZone,
+    cert: acm.ICertificate,
+    redirects?: boolean,
+    /* ... */
+}
+    
 export class CdkStack extends cdk.Stack {
   constructor(
     scope: cdk.Construct, id: string,
@@ -560,32 +601,38 @@ export class CdkStack extends cdk.Stack {
   ) {
     super(scope, id, props);
 
-    const { wwwRecordName, apiRecordName, domainName } = props;
-    const zone = route53.HostedZone.fromLookup(this, 'HostedZone', { domainName });
-    const cert = new acm.Certificate(this, 'DomainCertificate', {
-      domainName,
-      validation: acm.CertificateValidation.fromDns(zone),
-      subjectAlternativeNames: [`*.${domainName}`],
-    });
+    const { wwwRecordName, apiRecordName, domainName, zone, cert } = props;
     
     // other constructs previously created in this walkthrough
   }
 }
 ```
 
-In order for the hosted zone lookup to work we need to change one thing in `cdk/bin/cdk.ts`, which is to infer the CDK account and region as environment variables. This allows the stack to specialize itself for your account and region. The line is probably already there, just commented out.
+Now we should create the DNS Stack and wire in the constructs to the application stack in `cdk/bin/cdk.ts`. We also need to include an account number and region in the stack properties in order to work with Route53.
 
 ```typescript
 #!/usr/bin/env node
 import 'source-map-support/register';
 import * as cdk from '@aws-cdk/core';
 import { CdkStack } from '../lib/cdk-stack';
+import { DnsStack } from '../lib/dns-stack';
 
 const app = new cdk.App();
-const [wwwRecordName, apiRecordName, domainName] = ['www', 'api', 'pax-imperia.com'];
+const [
+  wwwRecordName, apiRecordName, domainName
+] = ['www', 'api', 'pax-imperia.com'];
+
+const dnsStack = new DnsStack(app, 'DnsStack', {
+  domainName,
+  env: {
+    account: process.env.CDK_DEFAULT_ACCOUNT,
+    region: process.env.CDK_DEFAULT_REGION
+  },
+});
 
 new CdkStack(app, 'PaxImperiaInfaStack', {
-  domainName, wwwRecordName, apiRecordName,
+  domainName, wwwRecordName, apiRecordName, redirects: true,
+  zone: dnsStack.zone, cert: dnsStack.cert,
   env: {
     account: process.env.CDK_DEFAULT_ACCOUNT,
     region: process.env.CDK_DEFAULT_REGION
@@ -611,7 +658,7 @@ export class CdkStack extends cdk.Stack {
   ) {
     super(scope, id, props);
 
-    const { wwwRecordName, apiRecordName, domainName } = props;
+    const { wwwRecordName, apiRecordName, domainName, zone, cert } = props;
     
     // hosted zone and lambda configuration
       
@@ -657,7 +704,7 @@ Hello, xpm!%
 
 Next up the site we have in S3. We want it to be accessible from `http://www.pax-imperia.com`, but users who access `http://pax-imperia.com` should get redirected to the `www` subdomain for convenience.
 
-We'll start with the redirect, which will require another bucket configured to redirect to to `www` subdomain.
+We'll start with the redirect, which will require another bucket configured to redirect to to `www` subdomain. The redirect is conditional so that if you create any more stacks under the same domain only one can "win" the redirect from the top level domain. Otherwise they fight over who gets to create the right bucket, and nobody likes that.
 
 > Note that S3 does not support HTTPS/TLS websites! You must use CloudFront for that, although it is more expensive. Here we have the API secured with HTTPS but not the static website parts. Pick a security stance that best matches your use case.
 
@@ -676,23 +723,25 @@ export class CdkStack extends cdk.Stack {
   ) {
     super(scope, id, props);
 
-    const { wwwRecordName, apiRecordName, domainName } = props;
+    const { wwwRecordName, apiRecordName, domainName, zone, cert } = props;
     
     // hosted zone, lambda, and api gateway configuration
-      
-    const redirectBucket = new s3.Bucket(this, 'RedirectBucket', {
-      bucketName: domainName,
-      websiteRedirect: { hostName: `${wwwRecordName}.${domainName}` },
-      autoDeleteObjects: true,
-      removalPolicy: cdk.RemovalPolicy.DESTROY,
-    });
+    
+    if (props.redirects === true) {
+      const redirectBucket = new s3.Bucket(this, 'RedirectBucket', {
+        bucketName: domainName,
+        websiteRedirect: { hostName: `${wwwRecordName}.${domainName}` },
+        autoDeleteObjects: true,
+        removalPolicy: cdk.RemovalPolicy.DESTROY,
+      });
 
-    new route53.ARecord(this, 'RedirectARecord', {
-      zone, recordName: domainName,
-      target: route53.RecordTarget.fromAlias(
-        new route53Targets.BucketWebsiteTarget(redirectBucket)
-      ),
-    });
+      new route53.ARecord(this, 'RedirectARecord', {
+        zone, recordName: domainName,
+        target: route53.RecordTarget.fromAlias(
+          new route53Targets.BucketWebsiteTarget(redirectBucket)
+        ),
+      });
+    }
       
     // static website bucket and deployment
   }
@@ -713,7 +762,7 @@ export class CdkStack extends cdk.Stack {
   ) {
     super(scope, id, props);
 
-    const { wwwRecordName, apiRecordName, domainName } = props;
+    const { wwwRecordName, apiRecordName, domainName, zone, cert } = props;
     
     // hosted zone, lambda, api gateway, and redirection bucket configuration
     
